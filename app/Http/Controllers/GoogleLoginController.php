@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -35,12 +36,9 @@ class GoogleLoginController extends Controller
      */
     public function redirectToProvider()
     {
-
         try {
             return Socialite::driver('google')->redirect();
         } catch (\Exception $e) {
-            // Log::error('Error redirecting to Google: ' . $e->getMessage());
-
             return response()->json(['error' => '無法重定向到Google。請稍後再試。'], 500);
         }
     }
@@ -70,10 +68,6 @@ class GoogleLoginController extends Controller
             ['email' => $socialUser->getEmail()],
             [
                 'name' => $socialUser->getName(),
-                // 你也可以保存其他從 Google 取得的資訊，例如頭像、ID 等
-                // 'avatar' => $socialUser->getAvatar(),
-                // 'google_id' => $socialUser->getId(),
-
                 // 你可能需要一個隨機密碼，因為某些驗證方法需要它，即使使用者從未使用它
                 'password' => bcrypt(Str::random(16))
             ]
@@ -82,12 +76,10 @@ class GoogleLoginController extends Controller
         // 為用戶生成 JWT
         $token = JWTAuth::fromUser($user);
 
-        // 返回令牌給前端
-        return response()->json([
-            'message' => 'Login successful via Google',
-            'token' => $token,
-            'user' => $user
-        ], 200);
-        // return redirect("/?token={$token}");
+       
+        // 將 token 設置在 HTTP Only Cookie 中
+        $cookie = cookie('jwt', $token, 60, null, null, false, true);
+        // 重定向到前端的某個路由，並攜帶 cookie
+        return redirect(config('services.frontend.url'))->withCookie($cookie);
     }
 }

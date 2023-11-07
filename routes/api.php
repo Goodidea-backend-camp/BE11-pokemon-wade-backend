@@ -92,5 +92,5 @@ Route::post('/payResult', [PaymentsResponseController::class, 'notifyResponse'])
 Route::get('email/verify/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->name('verification.verify');
 
 // 第三方登入
-Route::get('login/google', [GoogleLoginController::class, 'redirectToProvider']);
-Route::get('login/google/callback', [GoogleLoginController::class, 'handleProviderCallback']);
+Route::get('login/google', [GoogleLoginController::class, 'redirectToProvider'])->middleware('web');;
+Route::get('login/google/callback', [GoogleLoginController::class, 'handleProviderCallback'])->middleware('web');;
