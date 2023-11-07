@@ -52,7 +52,7 @@ class RegisterController extends Controller
 
         // 如果电子邮件已存在，并且用户没有google_id，则认为用户已注册
         if ($existingUser && is_null($existingUser->google_id)) {
-            return response(['message' => 'Email already registered.'], Response::HTTP_CONFLICT);
+            return response(['message' => config('error_messages.EMAILHASREGISTE')], Response::HTTP_CONFLICT);
         }
 
         // 如果电子邮件已存在，用户有google_id，且请求中提供了密码，更新密码
@@ -62,7 +62,7 @@ class RegisterController extends Controller
                 // 可能还需要更新其他字段...
             ]);
             // 不发送注册邮件，因为用户通过Google ID已存在
-            return response(['message' => 'Password updated for the existing Google user.'], Response::HTTP_OK);
+            return response(['message' => config('success_messages.GOOGLE_USER_PASSWORD_UPDATE')], Response::HTTP_OK);
         }
 
         // 电子邮件不存在，创建新用户
@@ -77,7 +77,7 @@ class RegisterController extends Controller
         // 发送注册确认邮件（您需要定义发送邮件的逻辑）
         event(new Registered($user));
 
-        return response(['message' => 'User successfully registered.'], Response::HTTP_CREATED);
+        return response(['message' => config('success_messages.REGISTER_SUCCESSFULLY')], Response::HTTP_CREATED);
     }
 
 

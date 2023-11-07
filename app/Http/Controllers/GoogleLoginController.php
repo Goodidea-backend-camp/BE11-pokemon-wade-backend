@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
@@ -39,7 +40,7 @@ class GoogleLoginController extends Controller
         try {
             return Socialite::driver('google')->redirect();
         } catch (\Exception $e) {
-            return response()->json(['error' => '無法重定向到Google。請稍後再試。'], 500);
+            return response()->json(['error' => config('error_messages.REDIRECTFAILED')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
