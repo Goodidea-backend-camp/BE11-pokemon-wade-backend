@@ -19,13 +19,16 @@ class RegisterRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+
+    public function rules()
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255', // 确保电子邮件在users表中是唯一的
+            
+            // 密码在所有情况下都是必须的，只有在Google登录的回调中才会被忽略
             'password' => 'required|string|min:6|confirmed',
-            //
         ];
     }
+    
 }

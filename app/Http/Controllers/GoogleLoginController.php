@@ -59,27 +59,36 @@ class GoogleLoginController extends Controller
      */
 
 
-    public function handleProviderCallback()
-    {
-        $socialUser = Socialite::driver('google')->user();
-
-        // 使用 email 查找本地使用者
-        $user = User::firstOrCreate(
-            ['email' => $socialUser->getEmail()],
-            [
-                'name' => $socialUser->getName(),
-                // 你可能需要一個隨機密碼，因為某些驗證方法需要它，即使使用者從未使用它
-                'password' => bcrypt(Str::random(16))
-            ]
-        );
-
-        // 為用戶生成 JWT
-        $token = JWTAuth::fromUser($user);
-
-       
-        // 將 token 設置在 HTTP Only Cookie 中
-        $cookie = cookie('jwt', $token, 60, null, null, false, true);
-        // 重定向到前端的某個路由，並攜帶 cookie
-        return redirect(config('services.frontend.url'))->withCookie($cookie);
-    }
+     public function handleProviderCallback()
+     {
+         $socialUser = Socialite::driver('google')->user();
+     
+         // 使用 email 查找本地用戶
+         $user = User::where('email', $socialUser->getEmail())->first();
+     
+         // 如果用戶不存在，創建用戶並附加 google_id
+         if (!$user) {
+             $user = User::create([
+                 'email' => $socialUser->getEmail(),
+                 'name' => $socialUser->getName(),
+                 'google_id' => $socialUser->getId(),
+                 'email_verified_at' => now(), // 設置電子郵件驗證的時間
+             ]);
+         } else {
+             // 如果用戶存在，並且 google_id 為空，則更新 google_id
+             if (empty($user->google_id)) {
+                 $user->google_id = $socialUser->getId();
+                 $user->save();
+             }
+         }
+     
+         // 為用戶生成 JWT
+         $token = JWTAuth::fromUser($user);
+     
+         // 將 token 設置在 HTTP Only Cookie 中
+         $cookie = cookie('jwt', $token, 60, null, null, false, true);
+         // 重定向到前端的某個路由，並攜帶 cookie
+         return redirect(config('services.frontend.url'))->withCookie($cookie);
+     }
+     
 }

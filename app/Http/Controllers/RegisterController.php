@@ -45,30 +45,44 @@ class RegisterController extends Controller
      *   }
      * }
      */
-    public function register(RegisterRequest $request )
+    public function register(RegisterRequest $request)
     {
-
-        // 1. 驗證輸入
-        // 每個email在users表單都是唯一的
-        // 密碼需要做確認
         $validatedData = $request->validated();
-        
+        $existingUser = User::where('email', $validatedData['email'])->first();
 
-        // 將使用者資料輸入資料庫, 目前role的部分預設為user
+        // 如果电子邮件已存在，并且用户没有google_id，则认为用户已注册
+        if ($existingUser && is_null($existingUser->google_id)) {
+            return response(['message' => 'Email already registered.'], Response::HTTP_CONFLICT);
+        }
+
+        // 如果电子邮件已存在，用户有google_id，且请求中提供了密码，更新密码
+        if ($existingUser && !is_null($existingUser->google_id) && !empty($validatedData['password'])) {
+            $existingUser->update([
+                'password' => Hash::make($validatedData['password']),
+                // 可能还需要更新其他字段...
+            ]);
+            // 不发送注册邮件，因为用户通过Google ID已存在
+            return response(['message' => 'Password updated for the existing Google user.'], Response::HTTP_OK);
+        }
+
+        // 电子邮件不存在，创建新用户
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => 'user'
+            'password' => Hash::make($validatedData['password']), 
+            'role' => 'user',
         ]);
+        
 
+        // 发送注册确认邮件（您需要定义发送邮件的逻辑）
         event(new Registered($user));
 
-        return response(['message' => config('success_messages.REGISTER_SUCCESS')],Response::HTTP_CREATED);
+        return response(['message' => 'User successfully registered.'], Response::HTTP_CREATED);
     }
 
 
-        /**
+
+    /**
      * 註冊email驗證信確認
      * 
     
@@ -110,11 +124,8 @@ class RegisterController extends Controller
 
         // 到這一步就去將他的user表的email欄位標注日期
         $user->markEmailAsVerified();
-        
-        // 直接導回首頁
-        return redirect('https://wade.monster');
-        
 
-        
+        // 直接導回首頁
+        return redirect(config('services.frontend.url'));
     }
 }
