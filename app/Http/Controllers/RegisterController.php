@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group Register
@@ -45,17 +45,14 @@ class RegisterController extends Controller
      *   }
      * }
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request )
     {
 
         // 1. 驗證輸入
         // 每個email在users表單都是唯一的
         // 密碼需要做確認
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        $validatedData = $request->validated();
+        
 
         // 將使用者資料輸入資料庫, 目前role的部分預設為user
         $user = User::create([
@@ -67,7 +64,7 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
-        return response(['message' => 'User registered successfully!'], 201);
+        return response(['message' => config('success_messages.REGISTER_SUCCESS')],Response::HTTP_CREATED);
     }
 
 
@@ -108,7 +105,7 @@ class RegisterController extends Controller
 
         // 判斷這個email是否已經驗證過
         if ($user->hasVerifiedEmail()) {
-            return response(['message' => 'Email already verified.']);
+            return response(['message' => config('success_messages.Email_Verification')]);
         }
 
         // 到這一步就去將他的user表的email欄位標注日期
