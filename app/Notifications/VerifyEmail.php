@@ -26,6 +26,5 @@ class VerifyEmail extends Notification implements ShouldQueue
             ]); // 确保传递了 $notifiable 实例
     }
 
-    // ...
 
 }
