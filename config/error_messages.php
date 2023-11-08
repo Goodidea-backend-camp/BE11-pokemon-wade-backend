@@ -7,8 +7,8 @@ return [
     'INVALID_CREDENTIALS' => 'Invalid credentials',
     'LOGOUTFAILED' => 'Failed to logout',
     'REDIRECTFAILED' => 'Failed to redirect',
-    "EMAILHASREGISTED"=>'Email already registered.',
-    
+    "EMAILHASREGISTERED"=>'Email already registered.',
+
     
     // ... 其他錯誤訊息
 

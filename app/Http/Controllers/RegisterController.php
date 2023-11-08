@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Services\RegisterService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -45,40 +46,20 @@ class RegisterController extends Controller
      *   }
      * }
      */
-    public function register(RegisterRequest $request)
+
+    public function register(RegisterRequest $request, RegisterService $registerService)
     {
         $validatedData = $request->validated();
-        $existingUser = User::where('email', $validatedData['email'])->first();
 
-        // 如果电子邮件已存在，并且用户没有google_id，则认为用户已注册
-        if ($existingUser && is_null($existingUser->google_id)) {
-            return response(['message' => config('error_messages.EMAILHASREGISTE')], Response::HTTP_CONFLICT);
-        }
+        $registerResponse = $registerService->registerUser($validatedData);
 
-        // 如果电子邮件已存在，用户有google_id，且请求中提供了密码，更新密码
-        if ($existingUser && !is_null($existingUser->google_id) && !empty($validatedData['password'])) {
-            $existingUser->update([
-                'password' => Hash::make($validatedData['password']),
-                // 可能还需要更新其他字段...
-            ]);
-            // 不发送注册邮件，因为用户通过Google ID已存在
-            return response(['message' => config('success_messages.GOOGLE_USER_PASSWORD_UPDATE')], Response::HTTP_OK);
-        }
+        // 根據返回的狀態馬，决定是返回用户數據還是只返回消息
+        $response = ['message' => $registerResponse['message']];
 
-        // 电子邮件不存在，创建新用户
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']), 
-            'role' => 'user',
-        ]);
-        
-
-        // 发送注册确认邮件（您需要定义发送邮件的逻辑）
-        event(new Registered($user));
-
-        return response(['message' => config('success_messages.REGISTER_SUCCESSFULLY')], Response::HTTP_CREATED);
+        return response($response, $registerResponse['status']);
     }
+
+
 
 
 
