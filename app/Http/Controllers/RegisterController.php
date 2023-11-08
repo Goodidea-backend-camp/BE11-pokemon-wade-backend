@@ -30,12 +30,15 @@ class RegisterController extends Controller
      *
      * @response 201 {
      *   "message": "User registered successfully!",
-     *   "user": {
-     *     "name": "John Doe",
-     *     "email": "john.doe@example.com",
-     *     // other user fields...
-     *   }
+     *   
      * }
+     * 
+     * 
+     * @response 200 {
+     *   "message": "Password updated for the existing Google user.",
+     *   
+     * }
+     * 
      * @response 422 {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -45,6 +48,15 @@ class RegisterController extends Controller
      *     // other validation errors...
      *   }
      * }
+     * 
+     * @response 409 {
+     *   "message": "Email already registered.",
+     *   
+     * }
+     * 
+     * 
+     * 
+     * 
      */
 
     public function register(RegisterRequest $request, RegisterService $registerService)

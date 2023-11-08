@@ -28,7 +28,7 @@ class GoogleLoginController extends Controller
      *  "url": "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=..."
      * }
      * @response 500 {
-     *  "error": "Unable to redirect to Google. Please try again later."
+     *  "error": "Failed to redirect"
      * }
      *
      * @return \Illuminate\Http\JsonResponse
