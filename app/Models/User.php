@@ -94,8 +94,5 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Order::class);
     }
 
-    // public function sendEmailVerificationNotification()
-    // {
-    //     $this->notify(new VerifyEmail); // 使用新的 VerifyEmail 通知类
-    // }
+   
 }
