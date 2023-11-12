@@ -15,7 +15,7 @@ class RegisterService
 
         // email已存在
         if ($existingUser) {
-            return $this->handleExistingUser($existingUser, $validatedData);
+            return $this->handleUserPassword($existingUser, $validatedData);
         }
 
         // email不存在
@@ -27,9 +27,9 @@ class RegisterService
         return User::where('email', $email)->first();
     }
 
-    protected function handleExistingUser(User $existingUser, array $data)
+    protected function handleUserPassword(User $existingUser, array $data)
     {
-        // 如果用户已存在，并且提供了密码，那更新密码
+        // 如果用户已存在，但密碼欄位為空，那更新密码
         if (empty($existingUser['password'])) {
             $existingUser->update([
                 'password' => Hash::make($data['password']),
@@ -37,18 +37,18 @@ class RegisterService
             return ['message' => config('success_messages.GOOGLE_USER_PASSWORD_UPDATE'), 'status' => Response::HTTP_OK];
         }
 
-        // 如果用户已存在，但没有提供密码（或密碼为空），返回錯誤
+        // 如果用户已存在，密碼欄位也已存在
         return ['message' => config('error_messages.EMAIL_HAS_REGISTERED'), 'status' => Response::HTTP_CONFLICT];
     }
 
 
-    protected function createNewUser(array $data)
+    protected function createNewUser(array $data, $user = User::ROLE_USER)
     {
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'user',
+            'role' => $user,
         ]);
 
         // 觸發注册事件
