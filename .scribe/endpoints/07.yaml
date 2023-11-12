@@ -29,7 +29,7 @@ endpoints:
         name: name
         description: '使用者的名字。示例：John Doe'
         required: true
-        example: quod
+        example: et
         type: string
         enumValues: []
         custom: []
@@ -37,7 +37,7 @@ endpoints:
         name: email
         description: 使用者的電子郵件地址。必須是唯一的並且符合電子郵件格式。示例：john.doe@example.com
         required: true
-        example: gayle.cronin@example.com
+        example: garrison.jakubowski@example.org
         type: string
         enumValues: []
         custom: []
@@ -45,7 +45,7 @@ endpoints:
         name: password
         description: 使用者的密碼。必須至少有6個字符長並且與`password_confirmation`參數匹配。示例：password123
         required: true
-        example: nHBbv|o|w7
+        example: '1+Y)IbYZ&H8^]'
         type: string
         enumValues: []
         custom: []
@@ -53,27 +53,43 @@ endpoints:
         name: password_confirmation
         description: 密碼確認。必須與`password`參數匹配。示例：password123
         required: true
-        example: porro
+        example: sed
         type: string
         enumValues: []
         custom: []
     cleanBodyParameters:
-      name: quod
-      email: gayle.cronin@example.com
-      password: nHBbv|o|w7
-      password_confirmation: porro
+      name: et
+      email: garrison.jakubowski@example.org
+      password: '1+Y)IbYZ&H8^]'
+      password_confirmation: sed
     fileParameters: []
     responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Password updated for the existing Google user.",
+
+          }
+        headers: []
+        description: ''
+        custom: []
       -
         status: 201
         content: |-
           {
             "message": "User registered successfully!",
-            "user": {
-              "name": "John Doe",
-              "email": "john.doe@example.com",
-              // other user fields...
-            }
+
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 409
+        content: |-
+          {
+            "message": "Email already registered.",
+
           }
         headers: []
         description: ''
@@ -89,6 +105,79 @@ endpoints:
               ],
               // other validation errors...
             }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/email/verify/{id}/{hash}'
+    metadata:
+      groupName: Register
+      groupDescription: 'Operations related to register.'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 註冊email驗證信確認
+      description: |-
+        電子郵件驗證確認
+
+        此端點用於確認用戶的電子郵件驗證(和前端較無關聯）。
+        它會比對提供的hash值和用戶的電子郵件生成的hash值。
+        如果驗證成功，該用戶的電子郵件將被標記為已驗證，並且將觸發一個已驗證的事件。
+        系統會將email驗證的日期存入資料庫
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      Authorization: 'Bearer '
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the verify.'
+        required: true
+        example: est
+        type: string
+        enumValues: []
+        custom: []
+      hash:
+        name: hash
+        description: ''
+        required: true
+        example: sed
+        type: string
+        enumValues: []
+        custom: []
+    cleanUrlParameters:
+      id: est
+      hash: sed
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Email verified successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Email already verified."
           }
         headers: []
         description: ''

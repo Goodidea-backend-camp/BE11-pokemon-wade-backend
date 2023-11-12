@@ -31,7 +31,7 @@ endpoints:
         name: email
         description: 用戶的電子郵件地址。example：user@example.com
         required: true
-        example: abuckridge@example.net
+        example: feest.ryley@example.com
         type: string
         enumValues: []
         custom: []
@@ -44,7 +44,7 @@ endpoints:
         enumValues: []
         custom: []
     cleanBodyParameters:
-      email: abuckridge@example.net
+      email: feest.ryley@example.com
       password: e123456
     fileParameters: []
     responses:

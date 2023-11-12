@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost:8000"
+            "value": "http:\/\/35.229.171.204"
         }
     ],
     "info": {
         "name": "Laravel",
-        "_postman_id": "7a79bc51-e65d-4e8e-8fbb-94c9e751340c",
+        "_postman_id": "4f29a9dc-5ed8-4ec7-bc6a-16bb97a4dc41",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -45,7 +45,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"abuckridge@example.net\",\"password\":\"e123456\"}"
+                            "raw": "{\"email\":\"feest.ryley@example.com\",\"password\":\"e123456\"}"
                         },
                         "description": "\u6b64\u7aef\u9ede\u5141\u8a31\u7528\u6236\u4f7f\u7528\u4ed6\u5011\u7684\u96fb\u5b50\u90f5\u4ef6\u548c\u5bc6\u78bc\u4f86\u767b\u5165\u7cfb\u7d71\uff0c\u4e26\u8fd4\u56de\u4e00\u500bJWT\u4ee4\u724c\u3002\n\n\u6703\u78ba\u8a8d\u4fe1\u7bb1\u662f\u5426\u5df2\u9a57\u8b49\uff0c\u5982\u679c\u5c1a\u672a\u9a57\u8b49\u8fd4\u56de\u932f\u8aa4\n\u6703\u8a2d\u7f6ecookie\u548chttp only\u4f86\u50b3token",
                         "auth": {
@@ -274,7 +274,7 @@
                                 {
                                     "id": "cart_item_id",
                                     "key": "cart_item_id",
-                                    "value": "5",
+                                    "value": "11",
                                     "description": "The ID of the cart item."
                                 }
                             ]
@@ -358,7 +358,7 @@
                         {
                             "header": [],
                             "code": 500,
-                            "body": "{\n \"error\": \"Unable to redirect to Google. Please try again later.\"\n}",
+                            "body": "{\n \"error\": \"Failed to redirect\"\n}",
                             "name": ""
                         }
                     ]
@@ -408,63 +408,6 @@
             "name": "Order",
             "description": "Operations related to orders.",
             "item": [
-                {
-                    "name": "\u8a02\u55ae\u65b0\u589e",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/orders",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/orders"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer "
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"total_price\":6857.879,\"payment_method\":\"pariatur\",\"payment_status\":\"enim\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{\n    \"id\": \"Newly created order ID\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n    \"message\": \"The given data was invalid.\",\n    \"errors\": {\n        \"field_name\": [\"The field_name is required.\"]\n    }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n    \"message\": \"Unauthenticated.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Server Error\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
                 {
                     "name": "\u8a02\u55ae\u5217\u8868\n\u7372\u53d6\u7576\u524d\u767b\u9304\u7528\u6236\u7684\u6240\u6709\u8a02\u55ae\u5217\u8868\u3002",
                     "request": {
@@ -519,13 +462,13 @@
                                 {
                                     "id": "order_id",
                                     "key": "order_id",
-                                    "value": "16",
+                                    "value": "7",
                                     "description": "The ID of the order."
                                 },
                                 {
                                     "id": "order",
                                     "key": "order",
-                                    "value": "recusandae",
+                                    "value": "quia",
                                     "description": "\u8a02\u55ae\u7684ID\u3002\u7528\u65bc\u6307\u5b9a\u67e5\u8a62\u54ea\u4e00\u500b\u8a02\u55ae\u7684\u8a73\u60c5\u3002"
                                 }
                             ]
@@ -553,63 +496,6 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"data\": [\n        {\n            \"id\": \"\u8a02\u55ae\u8a73\u60c5\u7684\u552f\u4e00ID\",\n            \"race_name\": \"\u76f8\u61c9\u7684\u7a2e\u65cf\u540d\u7a31\",\n            \"quantity\": \"\u8a02\u8cfc\u6578\u91cf\",\n            \"unit_price\": \"\u55ae\u4f4d\u50f9\u683c\",\n            \"subtotal_price\": \"\u5c0f\u8a08\u50f9\u683c\"\n        },\n        ...\u5176\u4ed6\u8a02\u55ae\u8a73\u60c5\u7684\u8cc7\u6599\n    ]\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "\u8a02\u55ae\u7d30\u7bc0\u65b0\u589e",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/orders_details",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/orders_details"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer "
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"order_id\":19,\"race_id\":20}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{\n  \"success\": true,\n  \"message\": \"Order detail created successfully.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n  \"success\": false,\n  \"message\": \"Validation error.\",\n  \"errors\": {\n    \"order_id\": [\n      \"The order id field is required.\"\n    ],\n    \"race_id\": [\n      \"The race id field is required.\"\n    ]\n  }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"success\": false,\n  \"message\": \"Race not found.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 500,
-                            "body": "{\n  \"success\": false,\n  \"message\": \"Server error.\"\n}",
                             "name": ""
                         }
                     ]
@@ -646,7 +532,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"totalPrice\":64449307.6066}"
+                            "raw": "{\"totalPrice\":10647462.96053551}"
                         },
                         "description": "\u4e3b\u8981\u4f7f\u7528\u8005\u9ede\u9078\u7d50\u5e33\u5f8c\u53ef\u4ee5\u8acb\u6c42\u9019\u500bAPI\uff0c\u7136\u5f8c\u85cd\u661f\u91d1\u6d41\u6703\u767c\u7d50\u5e33\u9801\u9762\u7d66\u4f7f\u7528\u8005\uff0c\n\u6b64\u65b9\u6cd5\u4e3b\u8981\u529f\u80fd\u5982\u4e0b\uff1a\n1. \u9a57\u8b49\u7576\u524d\u4f7f\u7528\u8005\u3002\n2. \u66f4\u65b0\u8207\u7576\u524d\u4f7f\u7528\u8005\u95dc\u806f\u7684\u8cfc\u7269\u8eca\u9805\u76ee\u7684\u7d50\u5e33\u72c0\u614b\u3002\n3. \u751f\u6210\u8207\u85cd\u661f\u91d1\u6d41\u76f8\u95dc\u7684\u652f\u4ed8\u53c3\u6578\uff08\u5305\u62ec\u52a0\u5bc6\u548c\u54c8\u5e0c\uff09\u3002\n4. \u8fd4\u56de\u652f\u4ed8\u53c3\u6578\uff0c\u4ee5\u4fbf\u524d\u7aef\u5c07\u4f7f\u7528\u8005\u91cd\u5b9a\u5411\u5230\u85cd\u661f\u91d1\u6d41\u7684\u652f\u4ed8\u9801\u9762\u3002"
                     },
@@ -684,7 +570,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"TradeInfo\":\"et\",\"TradeSha\":\"repellendus\"}"
+                            "raw": "{\"TradeInfo\":\"aut\",\"TradeSha\":\"earum\"}"
                         },
                         "description": "\u6b64\u65b9\u6cd5\u4e3b\u8981\u529f\u80fd\u5982\u4e0b\uff1a\n1. \u5f9e\u8acb\u6c42\u4e2d\u63d0\u53d6\u652f\u4ed8\u76f8\u95dc\u7684\u8cc7\u8a0a\u3002\n2. \u9a57\u8b49\u652f\u4ed8\u56de\u8abf\u7684\u6578\u5b57\u7c3d\u540d\u4ee5\u78ba\u4fdd\u8cc7\u6599\u7684\u5b8c\u6574\u6027\u3002\n3. \u6839\u64da\u652f\u4ed8\u7d50\u679c\u8a18\u9304\u76f8\u95dc\u7684\u65e5\u8a8c\u8cc7\u8a0a\u3002\n4. \u5728\u652f\u4ed8\u6210\u529f\u5f8c\u5411\u4f7f\u7528\u8005\u767c\u9001\u901a\u77e5\u90f5\u4ef6\u3002"
                     },
@@ -722,7 +608,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"first_name\":\"a\",\"last_name\":\"ut\",\"email\":\"pkihn@example.org\"}"
+                            "raw": "{\"first_name\":\"minus\",\"last_name\":\"facere\",\"email\":\"rosario.franecki@example.org\"}"
                         },
                         "description": ""
                     },
@@ -747,13 +633,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "15",
+                                    "value": "11",
                                     "description": "The ID of the pokemon."
                                 },
                                 {
                                     "id": "pokemon",
                                     "key": "pokemon",
-                                    "value": "8",
+                                    "value": "17",
                                     "description": "\u5bf6\u53ef\u5922\u7684ID\u3002\u793a\u4f8b\uff1a1"
                                 }
                             ]
@@ -797,13 +683,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "15",
+                                    "value": "2",
                                     "description": "The ID of the pokemon."
                                 },
                                 {
                                     "id": "pokemon",
                                     "key": "pokemon",
-                                    "value": "1",
+                                    "value": "3",
                                     "description": "\u5bf6\u53ef\u5922\u7684ID\u3002\u793a\u4f8b\uff1a1"
                                 }
                             ]
@@ -853,13 +739,13 @@
                                 {
                                     "id": "pokemon_id",
                                     "key": "pokemon_id",
-                                    "value": "15",
+                                    "value": "4",
                                     "description": "The ID of the pokemon."
                                 },
                                 {
                                     "id": "pokemon",
                                     "key": "pokemon",
-                                    "value": "18",
+                                    "value": "9",
                                     "description": "\u5bf6\u53ef\u5922\u7684ID\u3002\u7bc4\u4f8b\uff1a1"
                                 }
                             ]
@@ -980,7 +866,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"quod\",\"email\":\"gayle.cronin@example.com\",\"password\":\"nHBbv|o|w7\",\"password_confirmation\":\"porro\"}"
+                            "raw": "{\"name\":\"et\",\"email\":\"garrison.jakubowski@example.org\",\"password\":\"1+Y)IbYZ&H8^]\",\"password_confirmation\":\"sed\"}"
                         },
                         "description": "\u6b64\u65b9\u6cd5\u6703\u9a57\u8b49\u8f38\u5165\u7684\u8cc7\u6599\uff0c\u4e26\u5728\u6210\u529f\u9a57\u8b49\u5f8c\u5728`users`\u8868\u4e2d\u5275\u5efa\u4e00\u500b\u65b0\u7684\u4f7f\u7528\u8005\u7d00\u9304\u3002\n\u4e4b\u5f8c\uff0c\u5b83\u6703\u89f8\u767c\u4e00\u500b`Registered`\u4e8b\u4ef6\uff0c\u4e26\u8fd4\u56de\u4e00\u500b\u6210\u529f\u7684\u97ff\u61c9\uff0c\u5305\u62ec\u65b0\u5275\u5efa\u7684\u4f7f\u7528\u8005\u7684\u8cc7\u6599\u3002",
                         "auth": {
@@ -990,14 +876,85 @@
                     "response": [
                         {
                             "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Password updated for the existing Google user.\",\n\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
                             "code": 201,
-                            "body": "{\n  \"message\": \"User registered successfully!\",\n  \"user\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \/\/ other user fields...\n  }\n}",
+                            "body": "{\n  \"message\": \"User registered successfully!\",\n\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"Email already registered.\",\n\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 422,
                             "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"email\": [\n      \"The email has already been taken.\"\n    ],\n    \/\/ other validation errors...\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u8a3b\u518aemail\u9a57\u8b49\u4fe1\u78ba\u8a8d",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/email\/verify\/:id\/:hash",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/email\/verify\/:id\/:hash",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "est",
+                                    "description": "The ID of the verify."
+                                },
+                                {
+                                    "id": "hash",
+                                    "key": "hash",
+                                    "value": "sed",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer "
+                            }
+                        ],
+                        "body": null,
+                        "description": "\u96fb\u5b50\u90f5\u4ef6\u9a57\u8b49\u78ba\u8a8d\n\n\u6b64\u7aef\u9ede\u7528\u65bc\u78ba\u8a8d\u7528\u6236\u7684\u96fb\u5b50\u90f5\u4ef6\u9a57\u8b49(\u548c\u524d\u7aef\u8f03\u7121\u95dc\u806f\uff09\u3002\n\u5b83\u6703\u6bd4\u5c0d\u63d0\u4f9b\u7684hash\u503c\u548c\u7528\u6236\u7684\u96fb\u5b50\u90f5\u4ef6\u751f\u6210\u7684hash\u503c\u3002\n\u5982\u679c\u9a57\u8b49\u6210\u529f\uff0c\u8a72\u7528\u6236\u7684\u96fb\u5b50\u90f5\u4ef6\u5c07\u88ab\u6a19\u8a18\u70ba\u5df2\u9a57\u8b49\uff0c\u4e26\u4e14\u5c07\u89f8\u767c\u4e00\u500b\u5df2\u9a57\u8b49\u7684\u4e8b\u4ef6\u3002\n\u7cfb\u7d71\u6703\u5c07email\u9a57\u8b49\u7684\u65e5\u671f\u5b58\u5165\u8cc7\u6599\u5eab",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Email verified successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Email already verified.\"\n}",
                             "name": ""
                         }
                     ]
@@ -1085,13 +1042,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "nostrum",
+                                    "value": "minima",
                                     "type": "text",
                                     "description": "optional \u65b0\u7684\u7528\u6236\u540d\u7a31\u3002\u793a\u4f8b\uff1aJohn Doe"
                                 },
                                 {
                                     "key": "email",
-                                    "value": "veum.logan@example.net",
+                                    "value": "hal58@example.org",
                                     "type": "text",
                                     "description": "optional \u65b0\u7684\u96fb\u5b50\u90f5\u4ef6\u5730\u5740\u3002\u793a\u4f8b\uff1ajohn.doe@example.com"
                                 },

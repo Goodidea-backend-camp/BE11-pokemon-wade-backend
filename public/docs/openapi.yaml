@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost:8000'
+    url: 'http://35.229.171.204'
 paths:
   /api/Auth/login:
     post:
@@ -66,7 +66,7 @@ paths:
                 email:
                   type: string
                   description: 用戶的電子郵件地址。example：user@example.com
-                  example: abuckridge@example.net
+                  example: feest.ryley@example.com
                 password:
                   type: string
                   description: 用戶的密碼。
@@ -308,16 +308,16 @@ paths:
                   type: object
                   description: ''
                   example:
-                    product_id: architecto
+                    product_id: est
                   properties:
                     product_id:
                       type: string
                       description: 'The ID of the product.'
-                      example: architecto
+                      example: est
                     quantity:
                       type: integer
                       description: 'The new quantity for the product.'
-                      example: 19
+                      example: 5
                 quantity:
                   type: integer
                   description: 更新的商品數量，必須在1到庫存的範圍內。
@@ -353,7 +353,7 @@ paths:
         in: path
         name: cart_item_id
         description: 'The ID of the cart item.'
-        example: 5
+        example: 11
         required: true
         schema:
           type: integer
@@ -383,11 +383,11 @@ paths:
               schema:
                 type: object
                 example:
-                  error: 'Unable to redirect to Google. Please try again later.'
+                  error: 'Failed to redirect'
                 properties:
                   error:
                     type: string
-                    example: 'Unable to redirect to Google. Please try again later.'
+                    example: 'Failed to redirect'
       tags:
         - GoogleLogin
       security: []
@@ -418,97 +418,6 @@ paths:
         - GoogleLogin
       security: []
   /api/orders:
-    post:
-      summary: 訂單新增
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        201:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  id: 'Newly created order ID'
-                properties:
-                  id:
-                    type: string
-                    example: 'Newly created order ID'
-        400:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'The given data was invalid.'
-                  errors:
-                    field_name:
-                      - 'The field_name is required.'
-                properties:
-                  message:
-                    type: string
-                    example: 'The given data was invalid.'
-                  errors:
-                    type: object
-                    properties:
-                      field_name:
-                        type: array
-                        example:
-                          - 'The field_name is required.'
-                        items:
-                          type: string
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Server Error'
-                properties:
-                  message:
-                    type: string
-                    example: 'Server Error'
-      tags:
-        - Order
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                total_price:
-                  type: number
-                  description: 訂單的總價格。
-                  example: 6857.879
-                payment_method:
-                  type: string
-                  description: "訂單的付款方式，只能是 'credit_card' 或 'cash_on_delivery'。"
-                  example: pariatur
-                payment_status:
-                  type: string
-                  description: "訂單的付款狀態，只能是 'paid', 'unpaid', 或 'canceled'。"
-                  example: enim
-              required:
-                - total_price
-                - payment_method
-                - payment_status
     get:
       summary: "訂單列表\n獲取當前登錄用戶的所有訂單列表。"
       operationId: ''
@@ -545,7 +454,7 @@ paths:
         in: path
         name: order_id
         description: 'The ID of the order.'
-        example: 16
+        example: 7
         required: true
         schema:
           type: integer
@@ -553,121 +462,10 @@ paths:
         in: path
         name: order
         description: 訂單的ID。用於指定查詢哪一個訂單的詳情。
-        example: recusandae
+        example: quia
         required: true
         schema:
           type: string
-  /api/orders_details:
-    post:
-      summary: 訂單細節新增
-      operationId: ''
-      description: ''
-      parameters: []
-      responses:
-        201:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  success: true
-                  message: 'Order detail created successfully.'
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: 'Order detail created successfully.'
-        400:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  success: false
-                  message: 'Validation error.'
-                  errors:
-                    order_id:
-                      - 'The order id field is required.'
-                    race_id:
-                      - 'The race id field is required.'
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Validation error.'
-                  errors:
-                    type: object
-                    properties:
-                      order_id:
-                        type: array
-                        example:
-                          - 'The order id field is required.'
-                        items:
-                          type: string
-                      race_id:
-                        type: array
-                        example:
-                          - 'The race id field is required.'
-                        items:
-                          type: string
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  success: false
-                  message: 'Race not found.'
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Race not found.'
-        500:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  success: false
-                  message: 'Server error.'
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Server error.'
-      tags:
-        - OrderDetail
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                order_id:
-                  type: integer
-                  description: 訂單的ID。
-                  example: 19
-                race_id:
-                  type: integer
-                  description: "產品(Race)的ID。\n\n根據指定的race_id從使用者的購物車中提取數量，並根據race的價格計算出單價和總價。\n建立訂單細節後，減少相應的庫存，並清除使用者購物車中的該race項。"
-                  example: 20
-              required:
-                - order_id
-                - race_id
   /api/payments:
     post:
       summary: 請求藍星金流結帳頁面
@@ -687,7 +485,7 @@ paths:
                 totalPrice:
                   type: number
                   description: 購物車中所有商品的總價格。
-                  example: 64449307.6066
+                  example: 10647462.960536
               required:
                 - totalPrice
   /api/payResult:
@@ -709,11 +507,11 @@ paths:
                 TradeInfo:
                   type: string
                   description: 支付相關的加密資料。
-                  example: et
+                  example: aut
                 TradeSha:
                   type: string
                   description: 支付回調的數字簽名。
-                  example: repellendus
+                  example: earum
               required:
                 - TradeInfo
                 - TradeSha
@@ -743,15 +541,15 @@ paths:
                 first_name:
                   type: string
                   description: 'The first name of the user.'
-                  example: a
+                  example: minus
                 last_name:
                   type: string
                   description: 'The last name of the user.'
-                  example: ut
+                  example: facere
                 email:
                   type: string
                   description: 'The email address of the user.'
-                  example: pkihn@example.org
+                  example: rosario.franecki@example.org
               required:
                 - first_name
                 - last_name
@@ -842,7 +640,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the pokemon.'
-        example: 15
+        example: 11
         required: true
         schema:
           type: integer
@@ -850,7 +648,7 @@ paths:
         in: path
         name: pokemon
         description: 寶可夢的ID。示例：1
-        example: 8
+        example: 17
         required: true
         schema:
           type: integer
@@ -880,7 +678,7 @@ paths:
         in: path
         name: pokemon_id
         description: 'The ID of the pokemon.'
-        example: 15
+        example: 4
         required: true
         schema:
           type: integer
@@ -888,7 +686,7 @@ paths:
         in: path
         name: pokemon
         description: 寶可夢的ID。範例：1
-        example: 18
+        example: 9
         required: true
         schema:
           type: integer
@@ -916,13 +714,27 @@ paths:
       description: "此方法會驗證輸入的資料，並在成功驗證後在`users`表中創建一個新的使用者紀錄。\n之後，它會觸發一個`Registered`事件，並返回一個成功的響應，包括新創建的使用者的資料。"
       parameters: []
       responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"message\": \"Password updated for the existing Google user.\",\n\n}"
         201:
           description: ''
           content:
             text/plain:
               schema:
                 type: string
-                example: "{\n  \"message\": \"User registered successfully!\",\n  \"user\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    // other user fields...\n  }\n}"
+                example: "{\n  \"message\": \"User registered successfully!\",\n\n}"
+        409:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"message\": \"Email already registered.\",\n\n}"
         422:
           description: ''
           content:
@@ -942,25 +754,64 @@ paths:
                 name:
                   type: string
                   description: '使用者的名字。示例：John Doe'
-                  example: quod
+                  example: et
                 email:
                   type: string
                   description: 使用者的電子郵件地址。必須是唯一的並且符合電子郵件格式。示例：john.doe@example.com
-                  example: gayle.cronin@example.com
+                  example: garrison.jakubowski@example.org
                 password:
                   type: string
                   description: 使用者的密碼。必須至少有6個字符長並且與`password_confirmation`參數匹配。示例：password123
-                  example: nHBbv|o|w7
+                  example: '1+Y)IbYZ&H8^]'
                 password_confirmation:
                   type: string
                   description: 密碼確認。必須與`password`參數匹配。示例：password123
-                  example: porro
+                  example: sed
               required:
                 - name
                 - email
                 - password
                 - password_confirmation
       security: []
+  '/api/email/verify/{id}/{hash}':
+    get:
+      summary: 註冊email驗證信確認
+      operationId: email
+      description: "電子郵件驗證確認\n\n此端點用於確認用戶的電子郵件驗證(和前端較無關聯）。\n它會比對提供的hash值和用戶的電子郵件生成的hash值。\n如果驗證成功，該用戶的電子郵件將被標記為已驗證，並且將觸發一個已驗證的事件。\n系統會將email驗證的日期存入資料庫"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Email already verified.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Email already verified.'
+      tags:
+        - Register
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the verify.'
+        example: est
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: hash
+        description: ''
+        example: sed
+        required: true
+        schema:
+          type: string
   /api/user:
     get:
       summary: 使用者個人資訊
@@ -1052,11 +903,11 @@ paths:
                 name:
                   type: string
                   description: 'optional 新的用戶名稱。示例：John Doe'
-                  example: nostrum
+                  example: minima
                 email:
                   type: string
                   description: 'optional 新的電子郵件地址。示例：john.doe@example.com'
-                  example: veum.logan@example.net
+                  example: hal58@example.org
 tags:
   -
     name: Auth
