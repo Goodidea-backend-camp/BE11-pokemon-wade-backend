@@ -66,7 +66,7 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
     Route::get('orders/{order}/order_details', [OrderDetailController::class, 'index']);
 
     // 購買金流
-    Route::post('payments', [PaymentController::class, 'checkout']);
+    Route::post('payments', [PaymentController::class, 'prepareForPaymentData']);
 });
 
 
