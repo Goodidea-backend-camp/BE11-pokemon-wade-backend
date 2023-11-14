@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CartItemRequest;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
 use App\Models\Race;
+use App\Services\CartItemService;
 use Illuminate\Http\Request;
 
 /**
@@ -87,49 +89,16 @@ class CartItemController extends Controller
      * 
      */
 
-    public function store(Request $request)
+    public function store(Race $race, CartItemRequest $request, CartItemService $cartItemService)
     {
-        $race = Race::find($request->race_id);
+        $validationData = $request->validated();
+        $result = $cartItemService->handleCartAddition($race, $validationData['quantity']);
 
-        if (!$race) {
-            return response(['error' => 'Race not found'], 404);
+        if (array_key_exists('error', $result)) {
+            return response(['error' => $result['error']], $result['status']);
         }
 
-        $raceStock = $race->stock;
-        $racePrice = $race->price;
-
-        $validationData = $request->validate(
-            [
-                'quantity' => 'required|int|min:1|max:' . $raceStock,
-                'race_id' => 'required|int|exists:races,id'
-            ],
-        );
-
-        $userId = auth()->user()->id;
-
-        // 檢查該用戶的購物車中是否已有該商品
-        $cartItem = CartItem::where('user_id', $userId)->where('race_id', $request->race_id)->first();
-
-        // 如果已有，更新數量
-        if ($cartItem) {
-            $newQuantity = $cartItem->quantity + $validationData['quantity'];
-            // 如果發現加總過後,數量大於庫存則回傳錯誤
-            if ($newQuantity > $raceStock) {
-                return response(['error' => 'Requested quantity exceeds available stock'], 400);
-            }
-            $cartItem->quantity = $newQuantity;
-            $cartItem->save();
-        } else {
-            // 如果沒有，則創建新條目
-            CartItem::create([
-                'user_id' => $userId,
-                'quantity' => $validationData['quantity'],
-                'current_price' => $racePrice,
-                'race_id' => $request->race_id,
-
-
-            ]);
-        }
+        return response(['success' => $result['success']], $result['status']);
     }
 
     /**
@@ -195,5 +164,4 @@ class CartItemController extends Controller
         $cartItem->delete();
         return response()->noContent();
     }
-
 }

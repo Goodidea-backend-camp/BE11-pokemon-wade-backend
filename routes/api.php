@@ -54,8 +54,8 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
 
     // 購物車詳情
     Route::get('cart_items', [CartItemController::class, 'index']);
-    Route::post('cart_items', [CartItemController::class, 'store']);
     Route::put('cart_items', [CartItemController::class, 'update']);
+    Route::post('cart_items/{race}', [CartItemController::class, 'store']);
     Route::delete('cart_items/{cart_item}', [CartItemController::class, 'destroy']);
 
 
