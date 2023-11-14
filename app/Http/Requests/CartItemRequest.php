@@ -16,6 +16,7 @@ class CartItemRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->race = $this->route('race'); 
+
         
     }
 
@@ -37,3 +38,4 @@ class CartItemRequest extends FormRequest
         ];
     }
 }
+

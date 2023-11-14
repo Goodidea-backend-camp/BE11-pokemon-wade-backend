@@ -7,7 +7,10 @@ use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
 use App\Models\Race;
 use App\Services\CartItemService;
+use App\Services\CartItemStoreService;
+use App\Services\CartItemUpdateService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group CartItem
@@ -89,10 +92,10 @@ class CartItemController extends Controller
      * 
      */
 
-    public function store(Race $race, CartItemRequest $request, CartItemService $cartItemService)
+    public function store(Race $race, CartItemRequest $request, CartItemStoreService $cartItemStoreService)
     {
         $validationData = $request->validated();
-        $result = $cartItemService->handleCartAddition($race, $validationData['quantity']);
+        $result = $cartItemStoreService->handleCartAddition($race, $validationData['quantity']);
 
         if (array_key_exists('error', $result)) {
             return response(['error' => $result['error']], $result['status']);
@@ -123,28 +126,18 @@ class CartItemController extends Controller
      * 
      * @return \Illuminate\Http\Response 包含購物車的總金額的響應
      */
-    public function update(Request $request)
+    public function update(Race $race, CartItemRequest $request, CartItemUpdateService $cartItemUpdateService)
     {
+        try {
+            $validationData = $request->validated();
+            $userId = auth()->user()->id;
+            $totalPrice = $cartItemUpdateService->updateCartItemAndCalculateTotal($userId, $race->id, $validationData['quantity']);
 
-        // $race = Race::find($cartItem->race_id);
-        // $raceStock = $race->stock;
-        // $validationData = $request->validate(
-        //     [
-        //         'quantity' => 'required|int|min:1|max:' . $raceStock,
-        //     ],
-        // );
-        // $cartItem->update([
-        //     'quantity' => $validationData['quantity']
-        // ]);
-        // // 計算當前購物車總金額
-        // $userId = auth()->user()->id;
-
-        // // 查詢該用戶的所有購物車項目的總價格
-        // $totalPrice = CartItem::where('user_id', $userId)
-        //     ->selectRaw('SUM(current_price * quantity) as total')
-        //     ->value('total');
-
-        // return response(['total_price' => $totalPrice], 200);
+            return response(['total_price' => $totalPrice], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            // 捕獲任何拋出的異常並返回錯誤響應
+            return response(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**
