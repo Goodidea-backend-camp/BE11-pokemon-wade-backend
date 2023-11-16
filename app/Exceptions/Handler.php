@@ -22,7 +22,7 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof AuthorizationException) {
             
-            return response()->json(['error' => '您没有权限进行此操作'], 403);
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         if ($exception instanceof \Illuminate\Validation\ValidationException && $request->expectsJson()) {

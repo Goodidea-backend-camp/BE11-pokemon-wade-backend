@@ -85,8 +85,14 @@ class CartItemController extends Controller
      * }
      * 
      * @response 404 {
-     *     "error": "Race not found."
+     *     "error": "Resource not found"
      * }
+     * 
+     * @response 422 {
+     * "quantity": [
+     *    "Requested quantity exceeds available stock"
+     *]
+     *}
      * 
      * @return \Illuminate\Http\Response
      * 
@@ -117,13 +123,24 @@ class CartItemController extends Controller
      * @bodyParam quantity int required 更新的商品數量，必須在1到庫存的範圍內。Example: 3
      * 
      * @response 200 {
+     * "message": "Item added to cart successfully."
      *     
      * }
      * 
      * @response 400 {
      *     "error": "Validation error message."
-     * }
      * 
+     * }
+     * @response 422{
+     * "error": "No cart item found for the given user and race."
+     *}
+     * 
+     * 
+     * @response 422 {
+     * "quantity": [
+     *    "Requested quantity exceeds available stock"
+     *]
+     *}
      * @return \Illuminate\Http\Response 包含購物車的總金額的響應
      */
     public function update(Race $race, CartItemRequest $request, CartItemUpdateService $cartItemUpdateService)
@@ -148,6 +165,10 @@ class CartItemController extends Controller
      * @response 204
      * @response 404 {
      *     "error": "Resource not found."
+     * }
+     * 
+     * * @response 403 {
+     *     "error": "Unauthorized"
      * }
      * 
      * @return \Illuminate\Http\Response 返回無內容的204響應，表示成功刪除
