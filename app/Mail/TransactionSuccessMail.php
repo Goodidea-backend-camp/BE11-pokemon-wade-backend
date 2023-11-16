@@ -23,7 +23,7 @@ class TransactionSuccessMail extends Mailable
         $this->data = $data;
     }
 
-   
+
 
     /**
      * Get the message envelope.
@@ -40,11 +40,12 @@ class TransactionSuccessMail extends Mailable
      */
     public function content(): Content
     {
-        Log::info('Payment Callback Received:', ['Result' => 'Success']);
         return new Content(
-            view: 'emails/transaction_success',
+            view: 'emails.transaction_success',
+            with: ['userData' => $this->data] // 传递 userData 到视图
         );
     }
+
 
     /**
      * Get the attachments for the message.

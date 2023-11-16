@@ -7,6 +7,8 @@ use App\Models\CartItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
+use App\Services\PaymentResultJudgement;
+use App\Services\PostCheckoutService;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -20,7 +22,7 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentsResponseController extends Controller
 {
-   /**
+    /**
      * 藍星金流結帳完後結果返回確認，寄通知信給使用者
      * 
      * 此方法主要功能如下：
@@ -38,60 +40,26 @@ class PaymentsResponseController extends Controller
      * 
      * @return void
      */
-    public function notifyResponse(Request $request)
+    public function notifyResponse(Request $request, NewebpayMpgResponse $newebpayMpgResponse, PostCheckoutService $postCheckoutService)
     {
         $tradeInfo = $request->input('TradeInfo');
         $tradeSha = $request->input('TradeSha');
-        $tradeData = new NewebpayMpgResponse($tradeInfo);
+        $merchantOrderNo = $request->input('MerchantOrderNo');
+        try {
+            $paymentResult = $newebpayMpgResponse->decryptAndDecodeTradeInfo($tradeInfo);
 
-        // 比對hash(數位簽章)
-        if ($this->isHashMatched($tradeInfo, $tradeSha)) {
-            Log::info('Payment Callback Received:', ['Result' => 'Hash Matched']);
+            $merchantOrderNo = $paymentResult['Result']['MerchantOrderNo'];
+
+            $paymentResultJudgement = new PaymentResultJudgement($tradeInfo, $tradeSha, $paymentResult);
+
+            // 檢查支付是否成功，接著寄信
+            if (!$paymentResultJudgement->paymentResultJudge()) {
+                // 支付失败的處理...
+                throw new \Exception(config('error_messages.PAYMENT_FAILED'));
+            }
+            $postCheckoutService->sendCheckoutSuccessEmailToUser($tradeInfo, $merchantOrderNo);
+        } catch (\Exception $e) {
+            Log::error('Exception:', [$e->getMessage()]);
         }
-
-        // 觀察結帳狀態是否成功
-        if (!$tradeData->isSuccess()) {
-            Log::info('Payment Callback Received:', ['Result' => 'Failure']);
-        }
-
-        // 得到結帳的人的email
-        $emails = $this->getEmailsOfCheckedOutUsers();
-
-
-        $userData = [
-            'name' => 'wade',
-        ];
-
-        // 寄信
-        event(new TransactionSuccess($emails, $userData));
-    }
-
-    private function isHashMatched($tradeInfo, $tradeSha)
-    {
-        $key = config('payment.key');
-        $iv = config('payment.iv');
-        $hashs = "HashKey=$key&$tradeInfo&HashIV=$iv";
-        $hash = strtoupper(hash("sha256", $hashs));
-
-        return $hash == $tradeSha;
-    }
-
-
-    public function getEmailsOfCheckedOutUsers()
-    {
-        $checkedOutUserId = CartItem::where('checkout_status', 'checked')->pluck('user_id')->unique()->first();
-        Log::info('Payment Callback Received:', ['userId' => $checkedOutUserId]);
-
-        // 如果没有找到用户，您可能想要记录一个错误或执行其他逻辑
-        if ($checkedOutUserId === null) {
-            Log::error('No checked out user found.');
-            return null;
-        }
-
-        $email = User::where('id', $checkedOutUserId)->value('email');
-        Log::info('Payment Callback Received:', ['email' => $email]);
-        CartItem::where('user_id', $checkedOutUserId)->update(['checkout_status' => 'finished']);
-
-        return $email;
     }
 }
