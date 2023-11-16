@@ -14,7 +14,8 @@ class Order extends Model
         'total_price',
         'payment_status',
         'payment_method',
-        'status'
+        'status',
+        'order_no'
     ];
 
 

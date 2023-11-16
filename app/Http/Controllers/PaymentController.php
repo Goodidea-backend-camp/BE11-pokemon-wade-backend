@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
+use App\Models\User;
+use App\Services\OrderService;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -29,28 +32,46 @@ class PaymentController extends Controller
      * 
      * @apiGroup 支付
      * 
-     * @bodyParam totalPrice float required 購物車中所有商品的總價格。
+     * 
+     * @response 200 {
+     *     {
+     *"headers": {},
+     *"original": {
+     *"payment_url": "https://ccore.newebpay.com/MPG/mpg_gateway",
+     *"mid": "MS150428218",
+     *"edata1": “xx"
+     *"hash": “xxx"
+     *"exxception": null
+     *}
+     *}
+     * 
+     * }
+     * 
+     * @response 400 {
+     * "error": "No products in the cart to checkout."
+     *}
+     * 
      * 
      * @param \Illuminate\Http\Request $request 用戶的HTTP請求。
      * 
      * @return \Illuminate\Http\JsonResponse 返回包含支付參數的JSON響應。
      */
 
-    public function prepareForPaymentData(Request $request, PaymentService $paymentService)
+    public function prepareForPaymentData(Request $request, PaymentService $paymentService, OrderService $orderService)
     {
-        // 获取用户的ID
-        $userId = Auth::user()->id;
+        // 獲取用户的ID
+        $user = Auth::user();
+        $cartItems = CartItem::where('user_id', $user->id)->get();
 
-        // 更新與該用戶關聯的購物車狀態
-        CartItem::where('user_id', $userId)->update(['checkout_status' => 'checked']);
+        if ($cartItems->isEmpty()) {
+            return response()->json(['error' => config('error_messages.NO_CHECKOUT')], Response::HTTP_BAD_REQUEST);
+        }
 
-        $totalPrice = $request->input('totalPrice');
-        $paymentData = $paymentService->preparePaymentInfo($totalPrice);
-    
+        // 生成訂單和訂單詳情
+        $order = $orderService->createOrderAndDetails($user, $cartItems);
+        // 包裝成要給藍星的資料
+        $paymentData = $paymentService->preparePaymentInfo($order);
+
         return response()->json($paymentData);
-
-    
-
-       
     }
 }
