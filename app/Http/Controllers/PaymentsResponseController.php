@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Events\TransactionSuccess;
+use App\Models\Ability;
 use App\Models\CartItem;
+use App\Models\Nature;
+use App\Models\Order;
+use App\Models\Pokemon;
+use App\Models\Skill;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
 use App\Services\PaymentResultJudgement;
+use App\Services\PokemonCreateService;
 use App\Services\PostCheckoutService;
 use Illuminate\Support\Facades\Log;
 
@@ -40,7 +46,7 @@ class PaymentsResponseController extends Controller
      * 
      * @return void
      */
-    public function notifyResponse(Request $request, NewebpayMpgResponse $newebpayMpgResponse, PostCheckoutService $postCheckoutService)
+    public function notifyResponse(Request $request, NewebpayMpgResponse $newebpayMpgResponse, PostCheckoutService $postCheckoutService, PokemonCreateService $pokemonCreateService)
     {
         $tradeInfo = $request->input('TradeInfo');
         $tradeSha = $request->input('TradeSha');
@@ -57,7 +63,14 @@ class PaymentsResponseController extends Controller
                 // 支付失败的處理...
                 throw new \Exception(config('error_messages.PAYMENT_FAILED'));
             }
+
             $postCheckoutService->sendCheckoutSuccessEmailToUser($tradeInfo, $merchantOrderNo);
+
+            // 創建寶可夢
+            $pokemonCreateService->createPokemon($merchantOrderNo);
+           
+            
+
         } catch (\Exception $e) {
             Log::error('Exception:', [$e->getMessage()]);
         }
