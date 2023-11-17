@@ -42,14 +42,15 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
 
     Route::put('pokemons/{pokemon}/evolution', [PokemonController::class, 'evolution']);
 
-    
+
 
     /**
      * user管理
      */
     // 使用者細節
     Route::get('user', [UserController::class, 'show']);
-    Route::post('user', [UserController::class, 'update']);
+    Route::patch('user', [UserController::class, 'update']);
+
 
 
     // 購物車詳情
@@ -70,14 +71,15 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
 });
 
 
+
 /**
-     * race管理
-     */
-    // race列表
-    Route::get('races', [RaceController::class, 'index']);
+ * race管理
+ */
+// race列表
+Route::get('races', [RaceController::class, 'index']);
 
 
-    // 註冊
+// 註冊
 Route::post('/register', [RegisterController::class, 'register']);
 
 // 登入
