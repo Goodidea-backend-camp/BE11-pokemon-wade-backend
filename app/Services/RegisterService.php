@@ -55,6 +55,6 @@ class RegisterService
         event(new Registered($user));
 
         // 返回新建用户的回應
-        return ['message' => config('success_messages.REGISTER_SUCCESSFULLY'), 'status' => Response::HTTP_CREATED, 'user' => $user];
+        return ['message' => config('success_messages.REGISTER_SUCCESS'), 'status' => Response::HTTP_CREATED, 'user' => $user];
     }
 }
