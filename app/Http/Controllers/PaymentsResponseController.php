@@ -12,6 +12,7 @@ use App\Models\Skill;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
+use App\Services\OrderService;
 use App\Services\PaymentResultJudgement;
 use App\Services\PokemonCreateService;
 use App\Services\PostCheckoutService;
@@ -46,7 +47,7 @@ class PaymentsResponseController extends Controller
      * 
      * @return void
      */
-    public function notifyResponse(Request $request, NewebpayMpgResponse $newebpayMpgResponse, PostCheckoutService $postCheckoutService, PokemonCreateService $pokemonCreateService)
+    public function notifyResponse(Request $request, NewebpayMpgResponse $newebpayMpgResponse, PostCheckoutService $postCheckoutService, PokemonCreateService $pokemonCreateService, OrderService $orderService)
     {
         $tradeInfo = $request->input('TradeInfo');
         $tradeSha = $request->input('TradeSha');
@@ -68,7 +69,9 @@ class PaymentsResponseController extends Controller
 
             // 創建寶可夢
             $pokemonCreateService->createPokemon($merchantOrderNo);
-           
+
+            // 更改訂單狀態
+            $orderService->orderStatusUpdate($merchantOrderNo);
             
 
         } catch (\Exception $e) {
