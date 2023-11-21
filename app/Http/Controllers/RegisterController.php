@@ -63,8 +63,13 @@ class RegisterController extends Controller
         $registerResponse = $registerService->registerUser($validatedData);
 
         // 返回相應的響應和狀態碼
-        $response = ['error' => $registerResponse['message']];
-        return response()->json($response, $registerResponse['status']);
+        if(isset($registerResponse['message'])){
+            $response = ['message' => $registerResponse['message']];
+            return response()->json($response,$registerResponse['status']);
+        }
+
+        $response = ['error' => $registerResponse['error']];
+            return response()->json($response,$registerResponse['status']);
     }
 
     /**
