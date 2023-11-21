@@ -38,7 +38,7 @@ class RegisterService
         }
 
         // 如果用户已存在，密碼欄位也已存在
-        return ['message' => config('error_messages.EMAIL_HAS_REGISTERED'), 'status' => Response::HTTP_CONFLICT];
+        return ['error' => config('error_messages.EMAIL_HAS_REGISTERED'), 'status' => Response::HTTP_CONFLICT];
     }
 
 
