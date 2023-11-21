@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Requests;
-
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Race;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CartItemRequest extends FormRequest
 {
@@ -31,11 +32,13 @@ class CartItemRequest extends FormRequest
 
     }
 
-    public function messages()
+    protected function failedValidation(Validator $validator)
     {
-        return [
-            'quantity.max' => config('error_messages.QUANTITY_EXCEED_STOCK'),
-        ];
+        // 使用換行符合併所有的錯誤訊息
+        $errorMessage = implode(" ", $validator->errors()->all());
+
+        $response = response()->json(['error' => $errorMessage], 422);
+        throw new HttpResponseException($response);
     }
 }
 

@@ -107,7 +107,7 @@ class CartItemController extends Controller
             return response(['error' => $result['error']], $result['status']);
         }
 
-        return response(['success' => $result['success']], $result['status']);
+        return response(['message' => $result['success']], $result['status']);
     }
 
     /**
