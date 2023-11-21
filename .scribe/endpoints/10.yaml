@@ -41,7 +41,7 @@ endpoints:
         status: 500
         content: |-
           {
-           "error": "Unable to redirect to Google. Please try again later."
+           "error": "Failed to redirect"
           }
         headers: []
         description: ''

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Services\RegisterService;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group Register
@@ -29,50 +28,51 @@ class RegisterController extends Controller
      *
      * @response 201 {
      *   "message": "User registered successfully!",
-     *   "user": {
-     *     "name": "John Doe",
-     *     "email": "john.doe@example.com",
-     *     // other user fields...
-     *   }
+     *   
      * }
+     * 
+     * 
+     * @response 200 {
+     *   "message": "Password updated for the existing Google user.",
+     *   
+     * }
+     * 
      * @response 422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "email": [
+     *     "error": [
      *       "The email has already been taken."
      *     ],
      *     // other validation errors...
      *   }
      * }
+     * 
+     * @response 409 {
+     *   "error": "Email already registered.",
+     *   
+     * }
+     * 
+     * 
+     * 
+     * 
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $registerRequest, RegisterService $registerService)
     {
+        // // 使用驗證器的 validated 方法來獲得驗證後的數據
+        $validatedData = $registerRequest->validated();
 
-        // 1. 驗證輸入
-        // 每個email在users表單都是唯一的
-        // 密碼需要做確認
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        // 呼叫服務以註冊用戶
+        $registerResponse = $registerService->registerUser($validatedData);
 
-        // 將使用者資料輸入資料庫, 目前role的部分預設為user
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'role' => 'user'
-        ]);
+        // 返回相應的響應和狀態碼
+        if(isset($registerResponse['message'])){
+            $response = ['message' => $registerResponse['message']];
+            return response()->json($response,$registerResponse['status']);
+        }
 
-        event(new Registered($user));
-
-        return response(['message' => 'User registered successfully!', 'user' => $user], 201);
+        $response = ['error' => $registerResponse['error']];
+            return response()->json($response,$registerResponse['status']);
     }
 
-
-
-        /**
+    /**
      * 註冊email驗證信確認
      * 
     
@@ -98,25 +98,24 @@ class RegisterController extends Controller
      * }
      */
 
-     public function verifyEmail(Request $request, $id, $hash)
-     {
-         $user = User::findOrFail($id);
- 
-         // 此方法通常用來判斷文件是否被串改
-         if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-             throw new AuthorizationException();
-         }
- 
-         // 判斷這個email是否已經驗證過
-         if ($user->hasVerifiedEmail()) {
-             return response(['message' => 'Email already verified.']);
-         }
- 
-         // 到這一步就去將他的email驗證
-         if ($user->markEmailAsVerified()) {
-             event(new Verified($user));
-         }
- 
-         return response(['message' => 'Email verified successfully.']);
-     }
+    public function verifyEmail(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+
+        // 此方法通常用來判斷文件是否被串改
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            throw new AuthorizationException();
+        }
+
+        // 判斷這個email是否已經驗證過
+        if ($user->hasVerifiedEmail()) {
+            return response(['message' => config('success_messages.Email_Verification')]);
+        }
+
+        // 到這一步就去將他的user表的email欄位標注日期
+        $user->markEmailAsVerified();
+
+        // 直接導回首頁
+        return redirect(config('services.frontend.login_url'));
+    }
 }

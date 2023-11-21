@@ -38,7 +38,7 @@ endpoints:
         name: TradeInfo
         description: 支付相關的加密資料。
         required: true
-        example: et
+        example: aut
         type: string
         enumValues: []
         custom: []
@@ -46,13 +46,13 @@ endpoints:
         name: TradeSha
         description: 支付回調的數字簽名。
         required: true
-        example: repellendus
+        example: earum
         type: string
         enumValues: []
         custom: []
     cleanBodyParameters:
-      TradeInfo: et
-      TradeSha: repellendus
+      TradeInfo: aut
+      TradeSha: earum
     fileParameters: []
     responses: []
     responseFields: []

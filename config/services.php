@@ -36,6 +36,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URL'),
     ],
+
+    'frontend' => [
+        'url' => env('FRONTEND_URL'),
+        'login_url' => env('FRONTEND_LOGIN_URL'),
+    ],
     
 
 ];

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -30,7 +31,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'password',
         'status',
         'role',
-        'photo'
+        'photo',
+        'google_id',
+        'email_verified_at'
     ];
 
     /**
@@ -90,4 +93,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasMany(Order::class);
     }
+
+   
 }

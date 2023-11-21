@@ -42,11 +42,7 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
 
     Route::put('pokemons/{pokemon}/evolution', [PokemonController::class, 'evolution']);
 
-    /**
-     * race管理
-     */
-    // race列表
-    Route::get('races', [RaceController::class, 'index']);
+    
 
     /**
      * user管理
@@ -74,7 +70,14 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
 });
 
 
-// 註冊
+/**
+     * race管理
+     */
+    // race列表
+    Route::get('races', [RaceController::class, 'index']);
+
+
+    // 註冊
 Route::post('/register', [RegisterController::class, 'register']);
 
 // 登入
@@ -85,6 +88,9 @@ Route::post('/Auth/logout', [AuthController::class, 'logout']);
 // 藍星金流結帳回傳
 Route::post('/payResult', [PaymentsResponseController::class, 'notifyResponse']);
 
+// 驗證信回傳接收
+Route::get('email/verify/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->name('verification.verify');
+
 // 第三方登入
-Route::get('login/google', [GoogleLoginController::class, 'redirectToProvider']);
-Route::get('login/google/callback', [GoogleLoginController::class, 'handleProviderCallback']);
+Route::get('login/google', [GoogleLoginController::class, 'redirectToProvider'])->middleware('web');;
+Route::get('login/google/callback', [GoogleLoginController::class, 'handleProviderCallback'])->middleware('web');;

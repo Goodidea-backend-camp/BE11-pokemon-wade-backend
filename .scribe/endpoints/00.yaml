@@ -27,7 +27,7 @@ endpoints:
         name: first_name
         description: 'The first name of the user.'
         required: true
-        example: a
+        example: minus
         type: string
         enumValues: []
         custom: []
@@ -35,7 +35,7 @@ endpoints:
         name: last_name
         description: 'The last name of the user.'
         required: true
-        example: ut
+        example: facere
         type: string
         enumValues: []
         custom: []
@@ -43,14 +43,14 @@ endpoints:
         name: email
         description: 'The email address of the user.'
         required: true
-        example: pkihn@example.org
+        example: rosario.franecki@example.org
         type: string
         enumValues: []
         custom: []
     cleanBodyParameters:
-      first_name: a
-      last_name: ut
-      email: pkihn@example.org
+      first_name: minus
+      last_name: facere
+      email: rosario.franecki@example.org
     fileParameters: []
     responses:
       -
@@ -100,7 +100,7 @@ endpoints:
         name: id
         description: 'The ID of the pokemon.'
         required: true
-        example: 15
+        example: 11
         type: integer
         enumValues: []
         custom: []
@@ -108,13 +108,13 @@ endpoints:
         name: pokemon
         description: 寶可夢的ID。示例：1
         required: true
-        example: 8
+        example: 17
         type: integer
         enumValues: []
         custom: []
     cleanUrlParameters:
-      id: 15
-      pokemon: 8
+      id: 11
+      pokemon: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -168,7 +168,7 @@ endpoints:
         name: id
         description: 'The ID of the pokemon.'
         required: true
-        example: 15
+        example: 2
         type: integer
         enumValues: []
         custom: []
@@ -176,13 +176,13 @@ endpoints:
         name: pokemon
         description: 寶可夢的ID。示例：1
         required: true
-        example: 1
+        example: 3
         type: integer
         enumValues: []
         custom: []
     cleanUrlParameters:
-      id: 15
-      pokemon: 1
+      id: 2
+      pokemon: 3
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -238,7 +238,7 @@ endpoints:
         name: pokemon_id
         description: 'The ID of the pokemon.'
         required: true
-        example: 15
+        example: 4
         type: integer
         enumValues: []
         custom: []
@@ -246,13 +246,13 @@ endpoints:
         name: pokemon
         description: 寶可夢的ID。範例：1
         required: true
-        example: 18
+        example: 9
         type: integer
         enumValues: []
         custom: []
     cleanUrlParameters:
-      pokemon_id: 15
-      pokemon: 18
+      pokemon_id: 4
+      pokemon: 9
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

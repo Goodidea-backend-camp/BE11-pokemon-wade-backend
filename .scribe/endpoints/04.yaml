@@ -1,124 +1,43 @@
-name: Order
-description: 'Operations related to orders.'
+name: OrderDetail
+description: 'Operations related to orderDetais.'
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/orders
-    metadata:
-      groupName: Order
-      groupDescription: 'Operations related to orders.'
-      subgroup: ''
-      subgroupDescription: ''
-      title: 訂單新增
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-      Authorization: 'Bearer '
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      total_price:
-        name: total_price
-        description: 訂單的總價格。
-        required: true
-        example: 6857.879
-        type: number
-        enumValues: []
-        custom: []
-      payment_method:
-        name: payment_method
-        description: "訂單的付款方式，只能是 'credit_card' 或 'cash_on_delivery'。"
-        required: true
-        example: pariatur
-        type: string
-        enumValues: []
-        custom: []
-      payment_status:
-        name: payment_status
-        description: "訂單的付款狀態，只能是 'paid', 'unpaid', 或 'canceled'。"
-        required: true
-        example: enim
-        type: string
-        enumValues: []
-        custom: []
-    cleanBodyParameters:
-      total_price: 6857.879
-      payment_method: pariatur
-      payment_status: enim
-    fileParameters: []
-    responses:
-      -
-        status: 201
-        content: |-
-          {
-              "id": "Newly created order ID"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-              "message": "The given data was invalid.",
-              "errors": {
-                  "field_name": ["The field_name is required."]
-              }
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-              "message": "Unauthenticated."
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-              "message": "Server Error"
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
       - GET
-    uri: api/orders
+    uri: 'api/orders/{order_id}/order_details'
     metadata:
-      groupName: Order
-      groupDescription: 'Operations related to orders.'
+      groupName: OrderDetail
+      groupDescription: 'Operations related to orderDetais.'
       subgroup: ''
       subgroupDescription: ''
-      title: |-
-        訂單列表
-        獲取當前登錄用戶的所有訂單列表。
-      description: ''
+      title: 訂單細節列表
+      description: 用於獲取指定訂單的所有訂單詳情。
       authenticated: true
       custom: []
     headers:
       Content-Type: application/json
       Accept: application/json
       Authorization: 'Bearer '
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 7
+        type: integer
+        enumValues: []
+        custom: []
+      order:
+        name: order
+        description: 訂單的ID。用於指定查詢哪一個訂單的詳情。
+        required: true
+        example: quia
+        type: string
+        enumValues: []
+        custom: []
+    cleanUrlParameters:
+      order_id: 7
+      order: quia
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -131,13 +50,13 @@ endpoints:
           {
               "data": [
                   {
-                      "id": "訂單的唯一ID",
-                      "user_name": "下訂單的用戶名稱",
-                      "total_price": "訂單的總價格",
-                      "payment_method": "訂單的付款方式 (例如: credit_card, cash_on_delivery)",
-                      "payment_status": "訂單的付款狀態 (例如: paid, unpaid, canceled)"
+                      "id": "訂單詳情的唯一ID",
+                      "race_name": "相應的種族名稱",
+                      "quantity": "訂購數量",
+                      "unit_price": "單位價格",
+                      "subtotal_price": "小計價格"
                   },
-                  ...其他訂單的資料
+                  ...其他訂單詳情的資料
               ]
           }
         headers: []

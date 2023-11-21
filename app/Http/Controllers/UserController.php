@@ -42,8 +42,7 @@ class UserController extends Controller
      */
     public function show()
     {
-
-        $user = JWTAuth::parseToken()->authenticate();
+        $user = Auth::user();
 
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
