@@ -26,7 +26,6 @@ class PaymentService
             'key' => config('payment.key'),
             'iv' => config('payment.iv'),
             'id' => config('payment.id'),
-            'notify_url' => config('payment.notify_url'),
             'payment_url' => config('payment.payment_url'),
         ];
     }
@@ -41,7 +40,6 @@ class PaymentService
             'Amt' => $order->total_price,
             'MerchantOrderNo' => $order->order_no,
             'ItemDesc' => 'Good choice!',
-            'NotifyURL' => $paymentConfig['notify_url'],
         ));
     }
 

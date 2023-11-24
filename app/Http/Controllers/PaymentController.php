@@ -34,17 +34,16 @@ class PaymentController extends Controller
      * 
      * 
      * @response 200 {
-     *     {
-     *"headers": {},
-     *"original": {
-     *"payment_url": "https://ccore.newebpay.com/MPG/mpg_gateway",
-     *"mid": "MS150428218",
-     *"edata1": “xx"
-     *"hash": “xxx"
-     *"exxception": null
-     *}
-     *}
-     * 
+     *{
+    *"headers": {},
+    *"original": {
+        *"payment_url": "https://ccore.newebpay.com/MPG/mpg_gateway",
+        *"mid": "MS150428218",
+        *"edata1": "xxxxx",
+        *"hash": "57E12xxxxx"
+    *},
+    *"exception": null
+*}
      * }
      * 
      * @response 400 {
