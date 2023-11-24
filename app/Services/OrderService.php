@@ -15,16 +15,12 @@ class OrderService
     public function createOrderAndDetails($user, $cartItems)
     {
         DB::beginTransaction();
-
         try {
-            // 產生訂單編號
-            $uniqueOrderNo = $this->generateUniqueOrderNo();
-            // 產生訂單
-            $order = $this->createNewOrder($user->id, $uniqueOrderNo);
-            // 產生訂單細節並回傳總金額
-            $totalPrice = $this->calculateTotalAmountAndCreateOrderDetails($cartItems, $order->id);
-            // 計算完價格後更新訂單總價格
-            $order->total_price = $totalPrice;
+            // 檢查是否有未結帳的訂單，如果有，則不會再次新增訂單。
+            $order = Order::where('user_id', $user->id)->where('payment_status', 1)->first() ?? $this->createNewOrder($user->id, $this->generateUniqueOrderNo());
+        
+            // 計算總金額並更新訂單
+            $order->total_price = $this->calculateTotalAmountAndCreateOrderDetails($cartItems, $order->id, $order);
             $order->save();
             DB::commit();
             return $order;
@@ -32,6 +28,7 @@ class OrderService
             DB::rollback();
             throw $e;
         }
+        
     }
 
     private function createNewOrder($userId, $uniqueOrderNo)
@@ -47,18 +44,28 @@ class OrderService
         return $order;
     }
 
-    private function calculateTotalAmountAndCreateOrderDetails($cartItems, $orderId)
+    private function calculateTotalAmountAndCreateOrderDetails($cartItems, $orderId, $pendingOrder)
     {
         $totalPrice = 0;
+
+        // 如果是未結帳訂單，先刪除現有訂單細節，因為有可能使用者會更改內容。
+        if ($pendingOrder) {
+            OrderDetail::where('order_id', $orderId)->delete();
+        }
+
+        // 然後根據購物車創建新的訂單細節
         foreach ($cartItems as $item) {
             $race = Race::findOrFail($item['race_id']);
             $subtotal = $race->price * $item['quantity'];
             $totalPrice += $subtotal;
 
+            // 創建訂單細節
             $this->createOrderDetail($orderId, $item, $race->price, $subtotal);
         }
+
         return $totalPrice;
     }
+
 
     private function createOrderDetail($orderId, $item, $unitPrice, $subtotal)
     {

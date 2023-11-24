@@ -54,7 +54,6 @@ class OrderDetailController extends Controller
      *
      * @apiGroup 訂單詳情
      * 
-     * @urlParam orderDetail required 訂單詳情的ID。
      * 
      * 此方法还验证指定的订单详情是否属于当前登录的用户。
      * 
