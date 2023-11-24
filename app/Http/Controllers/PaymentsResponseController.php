@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
 use App\Services\OrderService;
+use App\Services\PaymentErrorHandlingService;
 use App\Services\PaymentResultJudgement;
 use App\Services\PokemonCreateService;
 use App\Services\PostCheckoutService;
@@ -51,7 +52,10 @@ class PaymentsResponseController extends Controller
     {
         $tradeInfo = $request->input('TradeInfo');
         $tradeSha = $request->input('TradeSha');
+        $status = $request->input('Status');
         $merchantOrderNo = $request->input('MerchantOrderNo');
+        Log::info('Request data:', $request->all());
+
         try {
             $paymentResult = $newebpayMpgResponse->decryptAndDecodeTradeInfo($tradeInfo);
 
@@ -72,10 +76,13 @@ class PaymentsResponseController extends Controller
 
             // 更改訂單狀態
             $orderService->orderStatusUpdate($merchantOrderNo);
-            
 
+             // 重定向到前端頁面
+             return redirect("https://wadelee.shop/order?status=$status&order=$merchantOrderNo");
         } catch (\Exception $e) {
-            Log::error('Exception:', [$e->getMessage()]);
+            $paymentErrorService = new PaymentErrorHandlingService();
+            return $paymentErrorService->handlePaymentException($e, $paymentResult, $merchantOrderNo);
         }
+  
     }
 }
