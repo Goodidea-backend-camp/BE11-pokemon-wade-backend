@@ -14,7 +14,7 @@ class CartItemStoreService
 
     public function __construct()
     {
-        $this->userId = Auth::id(); // 获取当前认证用户的ID
+        $this->userId = Auth::id(); 
     }
 
     public function handleCartAddition(Race $race, $quantity)

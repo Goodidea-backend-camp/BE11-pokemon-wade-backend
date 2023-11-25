@@ -2,7 +2,6 @@
 namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Race;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CartItemRequest extends FormRequest

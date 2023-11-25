@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
-use App\Models\User;
 use App\Services\OrderService;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 /**

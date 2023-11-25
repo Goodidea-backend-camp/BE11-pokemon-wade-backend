@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Services\AuthService;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Tymon\JWTAuth\Facades\JWTAuth;
-
 
 /**
  * @group Auth
@@ -98,7 +91,7 @@ class AuthController extends Controller
         // 从 cookie 中取出 token
         $token = $request->cookie('jwt');
 
-       
+
         // 使用 AuthService 来处理注销逻辑
         $logoutResponse = $authService->logout($token);
 
@@ -120,5 +113,4 @@ class AuthController extends Controller
 
         return $response;
     }
-
 }

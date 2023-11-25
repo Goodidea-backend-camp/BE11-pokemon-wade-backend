@@ -3,10 +3,8 @@
 namespace App\Services;
 
 use App\Events\TransactionSuccess;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 
 class PostCheckoutService
 {

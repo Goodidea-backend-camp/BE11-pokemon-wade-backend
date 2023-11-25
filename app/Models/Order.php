@@ -25,7 +25,7 @@ class Order extends Model
             '2' => 'paid',
             '1' => 'unpaid',
             '0' => 'canceled'
-            // ... 如果還有其他的映射，你可以繼續添加
+            
         ];
         return $statuses[$value] ?? $value;
     }
@@ -36,7 +36,7 @@ class Order extends Model
         $methods = [
             '0' => 'credit_card',
             '1' => 'cash_on_delivery',
-            // ... 如果還有其他的映射，你可以繼續添加
+            
         ];
         return $methods[$value] ?? $value;
     }
@@ -47,7 +47,7 @@ class Order extends Model
         $statuses = [
             '0' => 'Pending',
             '1' => 'Processed',
-            // ... 如果還有其他的映射，你可以繼續添加
+          
         ];
         return $statuses[$value] ?? $value;
     }

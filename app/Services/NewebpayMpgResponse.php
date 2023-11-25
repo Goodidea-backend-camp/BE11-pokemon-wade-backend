@@ -2,11 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Crypt;
-use openssl_cipher_iv_length;
-use openssl_decrypt;
-use Illuminate\Support\Facades\Log;
-
 class NewebpayMpgResponse
 {
     protected $key;

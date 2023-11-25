@@ -6,10 +6,8 @@ use App\Http\Requests\CartItemRequest;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
 use App\Models\Race;
-use App\Services\CartItemService;
 use App\Services\CartItemStoreService;
 use App\Services\CartItemUpdateService;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

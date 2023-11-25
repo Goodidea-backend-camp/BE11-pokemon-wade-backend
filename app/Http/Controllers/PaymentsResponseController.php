@@ -2,14 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TransactionSuccess;
-use App\Models\Ability;
-use App\Models\CartItem;
-use App\Models\Nature;
-use App\Models\Order;
-use App\Models\Pokemon;
-use App\Models\Skill;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
 use App\Services\OrderService;

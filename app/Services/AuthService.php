@@ -40,7 +40,7 @@ class AuthService
     public function logout($token)
     {
         try {
-            // 将 token 设置为无效
+            // 將 token 设置為無效
             JWTAuth::setToken($token)->invalidate();
 
             // 清除客户端的 JWT cookie
