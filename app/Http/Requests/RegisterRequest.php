@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpFoundation\Response;
 
 class RegisterRequest extends FormRequest
 {
@@ -36,7 +37,7 @@ class RegisterRequest extends FormRequest
         // 使用換行符合併所有的錯誤訊息
         $errorMessage = implode(" ", $validator->errors()->all());
 
-        $response = response()->json(['error' => $errorMessage], 422);
+        $response = response()->json(['error' => $errorMessage], Response::HTTP_UNPROCESSABLE_ENTITY);
         throw new HttpResponseException($response);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrderDetailResource;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group OrderDetail
@@ -63,9 +64,9 @@ class OrderDetailController extends Controller
     public function show(OrderDetail $orderDetail)
     {
         $user = auth()->user();
-        // 验证此 OrderDetail 是否属于当前用户
+        // 驗證此 OrderDetail 是否属于当前用户
         if ($orderDetail->order->user_id != $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['error' => config('error_messages.UNAUTHORIZED')], Response::HTTP_FORBIDDEN);
         }
 
         return new OrderDetailResource($orderDetail);

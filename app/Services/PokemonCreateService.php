@@ -31,8 +31,8 @@ class PokemonCreateService
         $skillsIdsForRace = $this->getSkillsForRace($cartItem->race_id);
 
         $pokemon = Pokemon::create([
-            'name' => '', 
-            'level' => rand(1, 100),
+            'name' => Pokemon::DEFAULT_NAME, 
+            'level' => rand(Pokemon::MIN_LEVEL, Pokemon::MAX_LEVEL),
             'user_id' => $cartItem->user_id,
             'race_id' => $cartItem->race_id,
             'ability_id' => $randomAbilityId,
@@ -50,6 +50,6 @@ class PokemonCreateService
             ->pluck('skill_id');
 
         // 隨機選擇最多四個技能 ID
-        return $skillsIdsForRace->random(min(4, $skillsIdsForRace->count()))->toArray();
+        return $skillsIdsForRace->random(min(Pokemon::MAX_SKILLS_COUNT, $skillsIdsForRace->count()))->toArray();
     }
 }

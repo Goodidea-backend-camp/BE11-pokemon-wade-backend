@@ -69,12 +69,16 @@ class PaymentsResponseController extends Controller
             // 更改訂單狀態
             $orderService->orderStatusUpdate($merchantOrderNo);
 
-             // 重定向到前端頁面
-             return redirect("https://wadelee.shop/order?status=$status&order=$merchantOrderNo");
+
+            $baseUrl = config('payment.base_url');
+            $url = "{$baseUrl}?status={$status}&order={$merchantOrderNo}";
+
+            // 重定向到前端頁面
+            return redirect($url);
         } catch (\Exception $e) {
+            $baseUrl = config('payment.base_url');
             $paymentErrorService = new PaymentErrorHandlingService();
-            return $paymentErrorService->handlePaymentException($e, $paymentResult, $merchantOrderNo);
+            return $paymentErrorService->handlePaymentException($e, $paymentResult, $merchantOrderNo, $baseUrl);
         }
-  
     }
 }

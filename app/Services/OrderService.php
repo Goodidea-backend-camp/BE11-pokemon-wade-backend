@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Race;
@@ -14,8 +15,8 @@ class OrderService
         DB::beginTransaction();
         try {
             // 檢查是否有未結帳的訂單，如果有，則不會再次新增訂單。
-            $order = Order::where('user_id', $user->id)->where('payment_status', 1)->first() ?? $this->createNewOrder($user->id, $this->generateUniqueOrderNo());
-        
+            $order = Order::where('user_id', $user->id)->where('payment_status', Order::UNPAID)->first() ?? $this->createNewOrder($user->id, $this->generateUniqueOrderNo());
+
             // 計算總金額並更新訂單
             $order->total_price = $this->calculateTotalAmountAndCreateOrderDetails($cartItems, $order->id, $order);
             $order->save();
@@ -25,7 +26,6 @@ class OrderService
             DB::rollback();
             throw $e;
         }
-        
     }
 
     private function createNewOrder($userId, $uniqueOrderNo)
@@ -33,17 +33,17 @@ class OrderService
         $order = Order::create([
             'user_id' => $userId,
             'order_no' => $uniqueOrderNo,
-            'total_price' => 0, // 初始金额设置为0
-            'payment_status' => '1',
-            'payment_method' => '0',
-            'status' => '0',
+            'total_price' => Order::UNCOMPUTED,
+            'payment_status' => Order::UNPAID,
+            'payment_method' => Order::CREDIT_CARD,
+            'status' => Order::PENDING,
         ]);
         return $order;
     }
 
     private function calculateTotalAmountAndCreateOrderDetails($cartItems, $orderId, $pendingOrder)
     {
-        $totalPrice = 0;
+        $totalPrice = Order::UNCOMPUTED;
 
         // 如果是未結帳訂單，先刪除現有訂單細節，因為有可能使用者會更改內容。
         if ($pendingOrder) {
@@ -79,7 +79,7 @@ class OrderService
     {
         $yearMonth = date('Ym'); // 獲取當前年月
         $sequenceNumber = $this->getNextSequenceNumber($yearMonth); // 獲取序列號
-        $formattedSequence = str_pad($sequenceNumber, 6, "0", STR_PAD_LEFT);
+        $formattedSequence = str_pad($sequenceNumber, Order::SEQUENCE_NUMBER_LENGTH, "0", STR_PAD_LEFT);
         return $yearMonth . $formattedSequence;
     }
 
@@ -87,13 +87,13 @@ class OrderService
     {
         $lastOrder = Order::orderBy('id', 'desc')->first(); //取最後一筆訂單
 
-        $currentSequence = 1; // 預設從1開始
+        $currentSequence = Order::INITIAL_SEQUENCE_NUMBER; // 預設從1開始
         if ($lastOrder) {
-            $lastOrderYearMonth = substr($lastOrder->order_no, 0, 6); // 提取最後一筆訂單的年月
-            $lastOrderSequence = intval(substr($lastOrder->order_no, -6)); // 提取最後一筆訂單的序列號
+            $lastOrderYearMonth = substr($lastOrder->order_no, Order::ORDER_NO_YEAR_MONTH_START, Order::ORDER_NO_YEAR_MONTH_LENGTH); // 提取最後一筆訂單的年月
+            $lastOrderSequence = intval(substr($lastOrder->order_no, Order::ORDER_NO_SEQUENCE_END_OFFSET)); // 提取最後一筆訂單的序列號
 
             if ($lastOrderYearMonth == $yearMonth) {
-                $currentSequence = $lastOrderSequence + 1; // 如果年月相同，序列號加1，如果日期變了就回到1
+                $currentSequence = $lastOrderSequence + Order::SEQUENCE_INCREMENT; // 如果年月和今天相同，序列號加1，如果日期變了就回到1
             }
         }
 
@@ -105,8 +105,8 @@ class OrderService
         // 更改訂單狀態
         $order = Order::where('order_no', $merchantOrderNo)->first();
         $order->update([
-            'payment_status' => 2, // 根據您的對應，2代表“已支付”
-            'status' => 1 // 根據您的對應，1代表“已完成”
+            'payment_status' => Order::PAID, // 根據您的對應，2代表“已支付”
+            'status' => Order::DONE // 根據您的對應，1代表“已完成”
         ]);
     }
 }

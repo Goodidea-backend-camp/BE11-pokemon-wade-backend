@@ -6,6 +6,8 @@ class NewebpayMpgResponse
 {
     protected $key;
     protected $iv;
+    const START_INDEX = 0;
+    const LAST_CHAR_INDEX = -1;
 
     public function __construct()
     {
@@ -37,14 +39,12 @@ class NewebpayMpgResponse
 
     private function stripPadding($string)
     {
-        $slast = ord(substr($string, -1));
+        $slast = ord(substr($string, self::LAST_CHAR_INDEX));
         $slastc = chr($slast);
         if (preg_match("/$slastc{" . $slast . "}/", $string)) {
-            $string = substr($string, 0, strlen($string) - $slast);
+            $string = substr($string, self::START_INDEX, strlen($string) - $slast);
             return $string;
         }
         throw new \RuntimeException('Invalid padding.');
     }
 }
-
-  

@@ -34,12 +34,12 @@ class PaymentService
     {
         return http_build_query(array(
             'MerchantID' => $paymentConfig['id'],
-            'RespondType' => 'JSON',
+            'RespondType' => config('payment.RespondType'),
             'TimeStamp' => time(),
-            'Version' => '2.0',
+            'Version' => config('payment.Version'),
             'Amt' => $order->total_price,
             'MerchantOrderNo' => $order->order_no,
-            'ItemDesc' => 'Good choice!',
+            'ItemDesc' => config('payment.ItemDescribe'),
         ));
     }
 
@@ -48,7 +48,7 @@ class PaymentService
     {
         return bin2hex(openssl_encrypt(
             $tradeInfo,
-            "AES-256-CBC",
+            config("payment.encript_method"),
             $paymentConfig['key'],
             OPENSSL_RAW_DATA,
             $paymentConfig['iv']
@@ -58,6 +58,6 @@ class PaymentService
     private function generateHash($encodedData, $paymentConfig)
     {
         $hashString = "HashKey=" . $paymentConfig['key'] . "&" . $encodedData . "&HashIV=" . $paymentConfig['iv'];
-        return strtoupper(hash("sha256", $hashString));
+        return strtoupper(hash(config('payment.hash_method'), $hashString));
     }
 }

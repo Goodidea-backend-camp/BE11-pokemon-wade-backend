@@ -50,7 +50,7 @@ class PostCheckoutService
 
     private function sendCheckoutSuccessEmail($email, $userData)
     {
-        // 發送电子邮件的逻辑
+        // 發送电子邮件的邏輯
         event(new TransactionSuccess($email, $userData));
     }
 }

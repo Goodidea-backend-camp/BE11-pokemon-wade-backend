@@ -14,6 +14,8 @@ return [
     "NO_CHECKOUT_USER_FOUND" => "No checked out user found for trade info: ",
     "USER_NOT_FOUND" => "User not found with ID:  ",
     "PAYMENT_FAILED" => "Payment verification failed or payment status is false. ",
+    "UNAUTHORIZED" => 'Unauthorized',
+
     "MPG01001" => "會員參數不可空白/設定錯誤",
     "MPG01002" => "時間戳記不可空白",
     "MPG01005" => "TokenTerm不可空白/設定錯誤",
