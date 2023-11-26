@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
@@ -26,9 +27,9 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => 'required|string|max:'.User::MAX_NAME_LENGTH.'|regex:/^[a-zA-Z0-9\s]*$/',
+            'email' => 'required|string|email|max:'.User::MAX_EMAIL_LENGTH,
+            'password' => 'required|string|min:'.User::MIN_PASSWORD_LENGTH.'|confirmed',
         ];
     }
 
