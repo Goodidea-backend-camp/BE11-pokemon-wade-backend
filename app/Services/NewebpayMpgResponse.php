@@ -33,16 +33,16 @@ class NewebpayMpgResponse
 
     private function decrypt($encrypted_data)
     {
-        $decrypted = openssl_decrypt(hex2bin($encrypted_data), "AES-256-CBC", $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->iv);
+        $decrypted = openssl_decrypt(hex2bin($encrypted_data), config("payment.encript_method"), $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->iv);
         return $this->stripPadding($decrypted);
     }
 
     private function stripPadding($string)
     {
-        $slast = ord(substr($string, self::LAST_CHAR_INDEX));
-        $slastc = chr($slast);
-        if (preg_match("/$slastc{" . $slast . "}/", $string)) {
-            $string = substr($string, self::START_INDEX, strlen($string) - $slast);
+        $lastCharValue = ord(substr($string, self::LAST_CHAR_INDEX));
+        $lastChar = chr($lastCharValue);
+        if (preg_match("/$lastChar{" . $lastCharValue . "}/", $string)) {
+            $string = substr($string, self::START_INDEX, strlen($string) - $lastCharValue);
             return $string;
         }
         throw new \RuntimeException('Invalid padding.');
