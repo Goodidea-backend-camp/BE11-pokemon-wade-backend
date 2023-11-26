@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\CartItem;
+use Illuminate\Support\Facades\DB;
 
 class CartItemUpdateService
 {
@@ -27,9 +28,10 @@ class CartItemUpdateService
     private function calculateTotalPrice($userId)
     {
         $total = CartItem::where('user_id', $userId)
-            ->selectRaw('SUM(current_price * quantity) as total')
-            ->value('total');
-
+        ->get(['current_price', 'quantity']) // 取得所需的列
+        ->reduce(function ($carry, $item) {
+            return $carry + ($item->current_price * $item->quantity);
+        }, 0); // 使用集合的 reduce 方法計算總和
         if ($total === null) {
             // 處理無法計算總金額的情況
             throw new \Exception(config("error_messages.CACULATION_FAILED"));
