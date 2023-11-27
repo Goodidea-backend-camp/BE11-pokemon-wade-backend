@@ -25,15 +25,23 @@ class RegisterRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
 
+
+    /**
+     * 定義用戶輸入驗證規則。
+     *
+     * 此函數返回一組驗證規則，用於檢查用戶提交的數據是否符合要求。
+     * 包括以下字段的驗證：
+     *  - name: 必須填寫，僅允許包含字母、數字、空格和中文字符，並且長度不能超過              User::MAX_NAME_LENGTH 定義的最大值。
+     * 
+     *  - email: 必須填寫，需要是有效的電子郵件格式，長度不能超過 User::MAX_EMAIL_LENGTH 定義的最大值。
+     * 
+     *  - password: 必須填寫，長度至少為 User::MIN_PASSWORD_LENGTH 定義的最小值，並且需要與確認密碼字段匹配。
+     *
+     * @return array 返回一個包含驗證規則的陣列。
+     */
     public function rules()
     {
         return [
-            //   - ^ 和 $ 表示字符串的開始和結束。
-            //   - a-zA-Z0-9 允許字母和數字。
-            //   - \s 允許空格。
-            //   - \x{4e00}-\x{9fa5} 允許中文字符（漢字），範圍涵蓋了絕大多數常用漢字。
-            //   - * 表示前面的字符可以出現任意次（包括零次）。
-            //   - u 修飾符表示正則表達式使用 UTF-8 編碼。
             'name' => 'required|string|max:' . User::MAX_NAME_LENGTH . '|regex:/^[a-zA-Z0-9\s\x{4e00}-\x{9fa5}]*$/u',
             'email' => 'required|string|email|max:' . User::MAX_EMAIL_LENGTH,
             'password' => 'required|string|min:' . User::MIN_PASSWORD_LENGTH . '|confirmed',
