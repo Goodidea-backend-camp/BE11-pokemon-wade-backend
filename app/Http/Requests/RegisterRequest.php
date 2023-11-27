@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegisterRequest extends FormRequest
 {
@@ -24,11 +27,17 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255', // 确保电子邮件在users表中是唯一的
-            
-            // 密码在所有情况下都是必须的，只有在Google登录的回调中才会被忽略
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:6|confirmed',
         ];
     }
-    
+
+    protected function failedValidation(Validator $validator)
+    {
+        // 使用換行符合併所有的錯誤訊息
+        $errorMessage = implode(" ", $validator->errors()->all());
+
+        $response = response()->json(['error' => $errorMessage], 422);
+        throw new HttpResponseException($response);
+    }
 }

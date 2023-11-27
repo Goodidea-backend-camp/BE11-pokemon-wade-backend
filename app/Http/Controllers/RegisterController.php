@@ -6,9 +6,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Services\RegisterService;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,9 +38,7 @@ class RegisterController extends Controller
      * }
      * 
      * @response 422 {
-     *   "message": "The given data was invalid.",
-     *   "errors": {
-     *     "email": [
+     *     "error": [
      *       "The email has already been taken."
      *     ],
      *     // other validation errors...
@@ -50,7 +46,7 @@ class RegisterController extends Controller
      * }
      * 
      * @response 409 {
-     *   "message": "Email already registered.",
+     *   "error": "Email already registered.",
      *   
      * }
      * 
@@ -58,22 +54,23 @@ class RegisterController extends Controller
      * 
      * 
      */
-
-    public function register(RegisterRequest $request, RegisterService $registerService)
+    public function register(RegisterRequest $registerRequest, RegisterService $registerService)
     {
-        $validatedData = $request->validated();
+        // // 使用驗證器的 validated 方法來獲得驗證後的數據
+        $validatedData = $registerRequest->validated();
 
+        // 呼叫服務以註冊用戶
         $registerResponse = $registerService->registerUser($validatedData);
 
-        // 根據返回的狀態馬，决定是返回用户數據還是只返回消息
-        $response = ['message' => $registerResponse['message']];
+        // 返回相應的響應和狀態碼
+        if(isset($registerResponse['message'])){
+            $response = ['message' => $registerResponse['message']];
+            return response()->json($response,$registerResponse['status']);
+        }
 
-        return response($response, $registerResponse['status']);
+        $response = ['error' => $registerResponse['error']];
+            return response()->json($response,$registerResponse['status']);
     }
-
-
-
-
 
     /**
      * 註冊email驗證信確認
@@ -119,6 +116,6 @@ class RegisterController extends Controller
         $user->markEmailAsVerified();
 
         // 直接導回首頁
-        return redirect(config('services.frontend.url'));
+        return redirect(config('services.frontend.login_url'));
     }
 }

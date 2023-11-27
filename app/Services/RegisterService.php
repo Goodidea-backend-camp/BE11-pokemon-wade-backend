@@ -38,7 +38,7 @@ class RegisterService
         }
 
         // 如果用户已存在，密碼欄位也已存在
-        return ['message' => config('error_messages.EMAIL_HAS_REGISTERED'), 'status' => Response::HTTP_CONFLICT];
+        return ['error' => config('error_messages.EMAIL_HAS_REGISTERED'), 'status' => Response::HTTP_CONFLICT];
     }
 
 
@@ -55,6 +55,6 @@ class RegisterService
         event(new Registered($user));
 
         // 返回新建用户的回應
-        return ['message' => config('success_messages.REGISTER_SUCCESSFULLY'), 'status' => Response::HTTP_CREATED, 'user' => $user];
+        return ['message' => config('success_messages.REGISTER_SUCCESS'), 'status' => Response::HTTP_CREATED, 'user' => $user];
     }
 }
