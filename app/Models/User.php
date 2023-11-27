@@ -20,6 +20,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     const ROLE_SUPERADMIN = 'superadmin';
     const ROLE_USER = 'user';
+    const MAX_NAME_LENGTH = 255;
+    const MAX_EMAIL_LENGTH = 255;
+    const MIN_PASSWORD_LENGTH = 6;
     /**
      * The attributes that are mass assignable.
      *
