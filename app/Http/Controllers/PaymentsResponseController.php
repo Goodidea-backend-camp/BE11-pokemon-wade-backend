@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NewebPayGatewayResponseHandler;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
 use App\Services\OrderService;
@@ -40,7 +41,7 @@ class PaymentsResponseController extends Controller
      * 
      * @return void
      */
-    public function notifyResponse(Request $request, NewebpayMpgResponse $newebpayMpgResponse, PostCheckoutService $postCheckoutService, PokemonCreateService $pokemonCreateService, OrderService $orderService)
+    public function notifyResponse(Request $request, NewebPayGatewayResponseHandler $newebPayGatewayResponse, PostCheckoutService $postCheckoutService, PokemonCreateService $pokemonCreateService, OrderService $orderService)
     {
         $tradeInfo = $request->input('TradeInfo');
         $tradeSha = $request->input('TradeSha');
@@ -49,7 +50,7 @@ class PaymentsResponseController extends Controller
         Log::info('Request data:', $request->all());
 
         try {
-            $paymentResult = $newebpayMpgResponse->decryptAndDecodeTradeInfo($tradeInfo);
+            $paymentResult = $newebPayGatewayResponse->decryptAndDecodeTradeInfo($tradeInfo);
 
             $merchantOrderNo = $paymentResult['Result']['MerchantOrderNo'];
 
