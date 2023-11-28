@@ -13,7 +13,7 @@ class PaymentErrorHandlingService
         $errorMessage = config("error_messages.{$errorCode}");
         Log::error('Exception:', [$exception->getMessage()]);
         // 更新訂單支付狀態為：取消
-        $this->updateOrderPaymentStatus($merchantOrderNo, Order::CANCELED);
+        $this->updateOrderPaymentStatus($merchantOrderNo, Order::ORDER_STATUS['payment_status']['CANCELED']);
 
         $url = "{$baseUrl}?status={$errorMessage}&order={$merchantOrderNo}";
         return redirect($url);

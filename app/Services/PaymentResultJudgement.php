@@ -25,7 +25,7 @@ class PaymentResultJudgement
 
     private function isSuccess()
     {
-        return $this->tradeData['Status'] === 'SUCCESS';
+        return $this->tradeData['Status'] === config('payment.Transaction_successful');
     }
 
     private function isHashMatched()

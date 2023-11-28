@@ -13,5 +13,7 @@ return [
     'RespondType' => "JSON",
     'Version' => "2.0",
     'encript_method' =>"AES-256-CBC",
-    'hash_method' =>"sha256"
+    'hash_method' =>"sha256",
+    'Transaction_successful' => "SUCCESS"
+    
 ];
