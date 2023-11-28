@@ -61,7 +61,7 @@ class PaymentController extends Controller
         $cartItems = CartItem::where('user_id', $user->id)->get();
 
         if ($cartItems->isEmpty()) {
-            return response()->json(['error' => config('error_messages.NO_CHECKOUT')], Response::HTTP_BAD_REQUEST);
+            return response()->json(['error' => config('error_messages.shopping_cart.NO_CHECKOUT')], Response::HTTP_BAD_REQUEST);
         }
 
         // 生成訂單和訂單詳情

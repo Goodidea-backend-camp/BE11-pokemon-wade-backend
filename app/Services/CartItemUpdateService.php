@@ -19,7 +19,7 @@ class CartItemUpdateService
 
         if (!$cartItem) {
             // 處理找不到 CartItem 的情況
-            throw new \Exception(config("error_messages.NO_CART_ITEM"));
+            throw new \Exception(config("error_messages.shopping_cart.NO_CART_ITEM"));
         }
 
         $cartItem->update(['quantity' => $quantity]);

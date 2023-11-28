@@ -66,7 +66,7 @@ class OrderDetailController extends Controller
         $user = auth()->user();
         // 驗證此 OrderDetail 是否属于当前用户
         if ($orderDetail->order->user_id != $user->id) {
-            return response()->json(['error' => config('error_messages.UNAUTHORIZED')], Response::HTTP_FORBIDDEN);
+            return response()->json(['error' => config('error_messages.general.UNAUTHORIZED')], Response::HTTP_FORBIDDEN);
         }
 
         return new OrderDetailResource($orderDetail);

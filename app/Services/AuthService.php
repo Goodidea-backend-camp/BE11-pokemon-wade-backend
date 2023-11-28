@@ -14,7 +14,8 @@ class AuthService
         // 檢查用戶是否已經驗證了電子郵箱
         $user = User::where('email', $credentials['email'])->first();
         if ($user && is_null($user->email_verified_at)) {
-            return ['error' => config('error_messages.EMAIL_NOT_VERIFIED'),
+            return ['error' => config('error_messages.general.EMAIL_NOT_VERIFIED')
+            ,
             'status' => Response::HTTP_FORBIDDEN ];
         }
         
@@ -22,7 +23,7 @@ class AuthService
         // 嘗試使用憑證獲取 JWT token
         $token = JWTAuth::attempt($credentials);
         if (!$token) {
-            return ['error' => config('error_messages.INVALID_CREDENTIALS'),
+            return ['error' => config('error_messages.general.INVALID_CREDENTIALS'),
             'status' => Response::HTTP_UNAUTHORIZED  ];
         }
 

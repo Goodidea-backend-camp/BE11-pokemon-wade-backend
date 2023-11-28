@@ -59,7 +59,7 @@ class PaymentsResponseController extends Controller
             // 檢查支付是否成功，接著寄信
             if (!$paymentResultJudgement->paymentResultJudge()) {
                 // 支付失败的處理...
-                throw new \Exception(config('error_messages.PAYMENT_FAILED'));
+                throw new \Exception(config('error_messages.payment.PAYMENT_FAILED'));
             }
 
             $postCheckoutService->sendCheckoutSuccessEmailToUser($tradeInfo, $merchantOrderNo);

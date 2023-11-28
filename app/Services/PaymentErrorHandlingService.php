@@ -10,7 +10,7 @@ class PaymentErrorHandlingService
     {
         // 取得結果的狀態
         $errorCode = $paymentResult['Status'];
-        $errorMessage = config("error_messages.{$errorCode}");
+        $errorMessage = config("error_messages.newebpay_mpg.{$errorCode}");
         Log::error('Exception:', [$exception->getMessage()]);
         // 更新訂單支付狀態為：取消
         $this->updateOrderPaymentStatus($merchantOrderNo, Order::ORDER_STATUS['payment_status']['CANCELED']);

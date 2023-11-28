@@ -43,7 +43,7 @@ class CartItemStoreService
             $newQuantity = $this->cartItem->quantity + $this->quantity;
             // 加設加總後超過庫存
             if ($newQuantity > $race->stock) {
-                throw ['error' => config('error_messages.QUANTITY_EXCEED_STOCK'), 'status' => Response::HTTP_BAD_REQUEST];
+                throw ['error' => config('error_messages.shopping_cart.QUANTITY_EXCEED_STOCK'), 'status' => Response::HTTP_BAD_REQUEST];
             }
             $this->cartItem->quantity = $newQuantity;
             $this->cartItem->save();

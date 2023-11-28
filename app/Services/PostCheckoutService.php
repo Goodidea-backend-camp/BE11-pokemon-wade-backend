@@ -28,7 +28,7 @@ class PostCheckoutService
             ->first();
 
         if (!$checkedOutUserId) {
-            throw new \Exception(config('error_messages.NO_CHECKOUT_USER_FOUND'. $tradeInfo));
+            throw new \Exception(config('error_messages.shopping_cart.NO_CHECKOUT_USER_FOUND'. $tradeInfo));
             return null;
         }
 
