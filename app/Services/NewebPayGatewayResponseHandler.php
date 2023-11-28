@@ -2,7 +2,13 @@
 
 namespace App\Services;
 
-class NewebpayMpgResponse
+/**
+ * NewebPayGatewayResponseHandler
+ *
+ * 用於處理來自 NewebPay 多功能支付網關（MPG）的響應。這包括驗證支付結果、處理響應加密和解密等功能。
+ */
+
+class NewebPayGatewayResponseHandler
 {
     protected $key;
     protected $iv;

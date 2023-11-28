@@ -2,11 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Pokemon;
 use App\Models\Race;
-use App\Rules\SkillJudgment;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 
 class StorePokemonRequest extends FormRequest
 {

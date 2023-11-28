@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Pokemon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchPokemonRequest extends FormRequest
@@ -32,8 +31,4 @@ class SearchPokemonRequest extends FormRequest
             // 'skills' => 'integer|exists:pokemons,skills'
         ];
     }
-
-    
 }
-
- 

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TransactionSuccess;
-use App\Models\CartItem;
-use App\Models\User;
+use App\Services\NewebPayGatewayResponseHandler;
 use Illuminate\Http\Request;
 use App\Services\NewebpayMpgResponse;
+use App\Services\OrderService;
+use App\Services\PaymentErrorHandlingService;
+use App\Services\PaymentResultJudgement;
+use App\Services\PokemonCreateService;
+use App\Services\PostCheckoutService;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -20,7 +23,7 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentsResponseController extends Controller
 {
-   /**
+    /**
      * 藍星金流結帳完後結果返回確認，寄通知信給使用者
      * 
      * 此方法主要功能如下：
@@ -38,60 +41,45 @@ class PaymentsResponseController extends Controller
      * 
      * @return void
      */
-    public function notifyResponse(Request $request)
+    public function notifyResponse(Request $request, NewebPayGatewayResponseHandler $newebPayGatewayResponse, PostCheckoutService $postCheckoutService, PokemonCreateService $pokemonCreateService, OrderService $orderService)
     {
         $tradeInfo = $request->input('TradeInfo');
         $tradeSha = $request->input('TradeSha');
-        $tradeData = new NewebpayMpgResponse($tradeInfo);
+        $status = $request->input('Status');
+        $merchantOrderNo = $request->input('MerchantOrderNo');
+        Log::info('Request data:', $request->all());
 
-        // 比對hash(數位簽章)
-        if ($this->isHashMatched($tradeInfo, $tradeSha)) {
-            Log::info('Payment Callback Received:', ['Result' => 'Hash Matched']);
+        try {
+            $paymentResult = $newebPayGatewayResponse->decryptAndDecodeTradeInfo($tradeInfo);
+
+            $merchantOrderNo = $paymentResult['Result']['MerchantOrderNo'];
+
+            $paymentResultJudgement = new PaymentResultJudgement($tradeInfo, $tradeSha, $paymentResult);
+
+            // 檢查支付是否成功，接著寄信
+            if (!$paymentResultJudgement->paymentResultJudge()) {
+                // 支付失败的處理...
+                throw new \Exception(config('error_messages.payment.PAYMENT_FAILED'));
+            }
+
+            $postCheckoutService->sendCheckoutSuccessEmailToUser($tradeInfo, $merchantOrderNo);
+
+            // 創建寶可夢
+            $pokemonCreateService->createPokemon($merchantOrderNo);
+
+            // 更改訂單狀態
+            $orderService->orderStatusUpdate($merchantOrderNo);
+
+
+            $baseUrl = config('payment.base_url');
+            $url = "{$baseUrl}?status={$status}&order={$merchantOrderNo}";
+
+            // 重定向到前端頁面
+            return redirect($url);
+        } catch (\Exception $e) {
+            $baseUrl = config('payment.base_url');
+            $paymentErrorService = new PaymentErrorHandlingService();
+            return $paymentErrorService->handlePaymentException($e, $paymentResult, $merchantOrderNo, $baseUrl);
         }
-
-        // 觀察結帳狀態是否成功
-        if (!$tradeData->isSuccess()) {
-            Log::info('Payment Callback Received:', ['Result' => 'Failure']);
-        }
-
-        // 得到結帳的人的email
-        $emails = $this->getEmailsOfCheckedOutUsers();
-
-
-        $userData = [
-            'name' => 'wade',
-        ];
-
-        // 寄信
-        event(new TransactionSuccess($emails, $userData));
-    }
-
-    private function isHashMatched($tradeInfo, $tradeSha)
-    {
-        $key = config('payment.key');
-        $iv = config('payment.iv');
-        $hashs = "HashKey=$key&$tradeInfo&HashIV=$iv";
-        $hash = strtoupper(hash("sha256", $hashs));
-
-        return $hash == $tradeSha;
-    }
-
-
-    public function getEmailsOfCheckedOutUsers()
-    {
-        $checkedOutUserId = CartItem::where('checkout_status', 'checked')->pluck('user_id')->unique()->first();
-        Log::info('Payment Callback Received:', ['userId' => $checkedOutUserId]);
-
-        // 如果没有找到用户，您可能想要记录一个错误或执行其他逻辑
-        if ($checkedOutUserId === null) {
-            Log::error('No checked out user found.');
-            return null;
-        }
-
-        $email = User::where('id', $checkedOutUserId)->value('email');
-        Log::info('Payment Callback Received:', ['email' => $email]);
-        CartItem::where('user_id', $checkedOutUserId)->update(['checkout_status' => 'finished']);
-
-        return $email;
     }
 }

@@ -27,4 +27,12 @@ class CartItem extends Model
     {
         return $this->belongsTo(Race::class);
     }
+
+   
+
+    public function getSubtotalAttribute()
+    {
+        return $this->quantity * $this->current_price; 
+    }
+
 }

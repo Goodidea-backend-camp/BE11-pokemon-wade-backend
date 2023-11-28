@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
+use App\Services\OrderService;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * @group Payment
@@ -26,64 +30,45 @@ class PaymentController extends Controller
      * 
      * @apiGroup 支付
      * 
-     * @bodyParam totalPrice float required 購物車中所有商品的總價格。
+     * 
+     * @response 200 {
+     *{
+    *"headers": {},
+    *"original": {
+        *"payment_url": "https://ccore.newebpay.com/MPG/mpg_gateway",
+        *"mid": "MS150428218",
+        *"edata1": "xxxxx",
+        *"hash": "57E12xxxxx"
+    *},
+    *"exception": null
+*}
+     * }
+     * 
+     * @response 400 {
+     * "error": "No products in the cart to checkout."
+     *}
+     * 
      * 
      * @param \Illuminate\Http\Request $request 用戶的HTTP請求。
      * 
      * @return \Illuminate\Http\JsonResponse 返回包含支付參數的JSON響應。
      */
 
-    public function checkout(Request $request)
+    public function prepareForPaymentData(Request $request, PaymentService $paymentService, OrderService $orderService)
     {
-        // 获取当前经过身份验证的用户
-        $user = JWTAuth::parseToken()->authenticate();
+        // 獲取用户的ID
+        $user = Auth::user();
+        $cartItems = CartItem::where('user_id', $user->id)->get();
 
-        // 获取用户的ID
-        $userId = $user->id;
+        if ($cartItems->isEmpty()) {
+            return response()->json(['error' => config('error_messages.shopping_cart.NO_CHECKOUT')], Response::HTTP_BAD_REQUEST);
+        }
 
-        // 更新与该用户关联的购物车项目的结账状态
-        CartItem::where('user_id', $userId)->update(['checkout_status' => 'checked']);
+        // 生成訂單和訂單詳情
+        $order = $orderService->createOrderAndDetails($user, $cartItems);
+        // 包裝成要給藍星的資料
+        $paymentData = $paymentService->preparePaymentInfo($order);
 
-        $totalPrice = $request->input('totalPrice');
-
-        $key = config('payment.key');
-        $iv = config('payment.iv');
-        $mid = config('payment.id');
-        $notifyURL = config('payment.notify_url');
-        $returnURL = config('payment.return_url');
-        $payment = config('payment.payment_url');
-
-        $tradeInfo = http_build_query(array(
-            'MerchantID' => $mid,
-            'RespondType' => 'JSON',
-            'TimeStamp' => time(),
-            'Version' => '2.0',
-            'MerchantOrderNo' => "test0315001" . time(),
-            'Amt' => $totalPrice,
-            'ItemDesc' => 'test',
-            'NotifyURL' => $notifyURL,
-            'ReturnURL' => $returnURL,
-        ));
-
-        $encodedData = bin2hex(openssl_encrypt(
-            $tradeInfo,
-            "AES-256-CBC",
-            $key,
-            OPENSSL_RAW_DATA,
-            $iv
-        ));
-
-
-        $hashs = "HashKey=" . $key . "&" . $encodedData . "&HashIV=" . $iv;
-        $hash = strtoupper(hash("sha256", $hashs));
-
-
-
-        return response()->json([
-            'payment_url' => $payment,
-            'mid' => $mid,
-            'edata1' => $encodedData,
-            'hash' => $hash
-        ]);
+        return response()->json($paymentData);
     }
 }

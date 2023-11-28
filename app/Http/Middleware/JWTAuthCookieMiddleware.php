@@ -18,7 +18,7 @@ class JWTAuthCookieMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // 尝试从 cookie 中获取 token
+        // 嘗試从 cookie 中獲取 token
         $token = $request->cookie('jwt');
     
         if (!$token) {
@@ -26,15 +26,15 @@ class JWTAuthCookieMiddleware
         } 
 
         try {
-            // 使用 token 认证用户
+            // 使用 token 認證用户
             $user = JWTAuth::setToken($token)->authenticate();
-            // 如果认证通过，将用户信息设置到请求对象中
+            // 如果認證通过，將用户信息設置到请求對象中
             Auth::setUser($user);
         } catch (JWTException $e) {
-            // 如果在此过程中出现任何异常，返回错误响应
-            return response()->json(['error' => 'Unauthorized'], 401);
+            // 如果在此過程中出现任何異常，返回錯誤響應
+            return response()->json(['error' => 'error_messages.general.UNAUTHORIZED'], Response::HTTP_UNAUTHORIZED);
         }
-        // 继续处理请求
+        // 繼續處理请求
         return $next($request);
     }
     

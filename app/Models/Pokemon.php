@@ -11,11 +11,10 @@ class Pokemon extends Model
 {
     use SoftDeletes;
     use HasFactory;
-    
-
-  
-
-
+    const MIN_LEVEL = 1;
+    const MAX_LEVEL = 100;
+    const MAX_SKILLS_COUNT = 4;
+    const DEFAULT_NAME = '';
     protected $table = 'pokemons';
     protected $casts = [
         'skills' => 'array',
@@ -56,11 +55,6 @@ class Pokemon extends Model
     /**
      * Retrieve the model for a bound value.
      *
-    //  * @param  mixed  $value
-    //  * @param  string|null  $field
-    //  * @return \Illuminate\Database\Eloquent\Model|null
-    //  *
-    //  * @throws ModelNotFoundException
      */
     // public function resolveRouteBinding($value, $field = null)
     // {

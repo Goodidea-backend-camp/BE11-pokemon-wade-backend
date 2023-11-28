@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\OrderDetailRequest;
 use App\Http\Resources\OrderDetailResource;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use App\Models\Race;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group OrderDetail
@@ -54,7 +53,6 @@ class OrderDetailController extends Controller
      *
      * @apiGroup 訂單詳情
      * 
-     * @urlParam orderDetail required 訂單詳情的ID。
      * 
      * 此方法还验证指定的订单详情是否属于当前登录的用户。
      * 
@@ -66,9 +64,9 @@ class OrderDetailController extends Controller
     public function show(OrderDetail $orderDetail)
     {
         $user = auth()->user();
-        // 验证此 OrderDetail 是否属于当前用户
+        // 驗證此 OrderDetail 是否属于当前用户
         if ($orderDetail->order->user_id != $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['error' => config('error_messages.general.UNAUTHORIZED')], Response::HTTP_FORBIDDEN);
         }
 
         return new OrderDetailResource($orderDetail);
