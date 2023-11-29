@@ -28,6 +28,4 @@ class OrderRequst extends FormRequest
 
         ];
     }
-
-    
 }

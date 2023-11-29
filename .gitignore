@@ -17,3 +17,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/public/docs
+.scribe/
+/home/ubuntu/BE11-pokemon-wade-backend/public/docs
+

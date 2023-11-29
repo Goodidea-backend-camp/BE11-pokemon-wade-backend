@@ -8,7 +8,7 @@ class GoogleLoginService
 {
     public function handleGoogleUser($googleUser)
     {
-        // 查找或创建用户
+        // 查找或創建用户
         $user = $this->findOrCreateUser($googleUser);
 
         // 更新用户的 Google ID
@@ -18,7 +18,7 @@ class GoogleLoginService
         return JWTAuth::fromUser($user);
     }
 
-    // 查找或创建用户的逻辑
+    // 查找或創建用户的邏輯
     protected function findOrCreateUser($googleUser)
     {
         return User::firstOrCreate(
@@ -31,7 +31,7 @@ class GoogleLoginService
         );
     }
 
-    // 更新Google ID的逻辑
+    // 更新Google ID的邏輯
     protected function updateGoogleId(User $user, $googleUser)
     {
         if (empty($user->google_id)) {

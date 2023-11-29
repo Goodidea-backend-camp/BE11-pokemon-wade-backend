@@ -15,7 +15,6 @@ class VerifyEmail extends Notification implements ShouldQueue
     {
         return ['mail'];
     }
-    // ... (保持不变)
 
     public function toMail($notifiable)
     {
@@ -23,7 +22,7 @@ class VerifyEmail extends Notification implements ShouldQueue
             ->subject('Verify Your Email Address')
             ->markdown('emails.verify', [
                 'notifiable' => $notifiable
-            ]); // 确保传递了 $notifiable 实例
+            ]); 
     }
 
 

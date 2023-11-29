@@ -38,7 +38,7 @@ class GoogleLoginController extends Controller
         try {
             return Socialite::driver('google')->redirect();
         } catch (\Exception $e) {
-            return response()->json(['error' => config('error_messages.REDIRECT_FAILED')], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => config('error_messages.general.REDIRECT_FAILED')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
