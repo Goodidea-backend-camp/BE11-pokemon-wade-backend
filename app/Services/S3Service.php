@@ -11,14 +11,14 @@ class S3Service
 
     public function __construct()
     {
-        $this->s3Client = $this->createS3Client();
+        $this->s3Client = $this->createS3ClientObject();
     }
 
     public function handleFileUpload(User $user, $file)
     {
-        // 使用新的方法準備並保存用戶照片
-        $filePath = $this->prepareAndSaveUserPhoto($user, $file);
-        // 生成完整的 S3 URL方便生成presigned URL
+        // 產生檔案路徑並保存用戶照片
+        $filePath = $this->getFilePathAndSaveUserPhoto($user, $file);
+        // 取得檔案類型
         $filetype = $file->getClientMimeType();
     
         // 生成prsigned URL
@@ -30,7 +30,7 @@ class S3Service
         ];     
     }
 
-    protected function prepareAndSaveUserPhoto(User $user, $file)
+    protected function getFilePathAndSaveUserPhoto(User $user, $file)
     {
         $filename = time() . '.' . $file->extension();
         $filePath = 'userPhotos/' . $filename;
@@ -51,7 +51,7 @@ class S3Service
     }
 
 
-    protected function createS3Client()
+    protected function createS3ClientObject()
     {
         return new S3Client([
             'version' => 'latest',

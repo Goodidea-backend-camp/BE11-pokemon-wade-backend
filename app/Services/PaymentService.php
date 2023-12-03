@@ -40,6 +40,7 @@ class PaymentService
             'Amt' => $order->total_price,
             'MerchantOrderNo' => $order->order_no,
             'ItemDesc' => config('payment.ItemDescribe'),
+            'ReturnURL' => config('payment.return_url'),
         ));
     }
 

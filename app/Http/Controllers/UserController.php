@@ -5,11 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Services\S3Service;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Aws\S3\S3Client;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -71,7 +67,7 @@ class UserController extends Controller
         $user = Auth::user();
         $validatedData = $request->validated();
         $user->update($validatedData);
-    
+
         // 假設是上傳檔案，這裡就要去組裝presign URL
         if ($request->hasFile('userPhoto')) {
             $file = $request->file('userPhoto');
