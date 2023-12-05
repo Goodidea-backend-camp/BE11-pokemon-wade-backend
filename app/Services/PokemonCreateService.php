@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\{Ability, CartItem, Nature, Order, Pokemon};
@@ -10,12 +11,12 @@ class PokemonCreateService
     {
         // 取的使用者id
         $checkedOutUserId = Order::where('order_no', $merchantOrderNo)
-        ->pluck('user_id')
-        ->unique()
-        ->first();
+            ->pluck('user_id')
+            ->unique()
+            ->first();
         // 取得該使用者購物車
         $cartItems = CartItem::where('user_id', $checkedOutUserId)->get();
-        
+
         foreach ($cartItems as $item) {
             // 這裡調用其他服務方法
             $this->createPokemonForCartItem($item);
@@ -26,21 +27,21 @@ class PokemonCreateService
 
     protected function createPokemonForCartItem($cartItem)
     {
-        $randomAbilityId = Ability::inRandomOrder()->first()->id;
-        $randomNatureId = Nature::inRandomOrder()->first()->id;
-        $skillsIdsForRace = $this->getSkillsForRace($cartItem->race_id);
+        for ($i = 0; $i < $cartItem->quantity; $i++) {
+            $randomAbilityId = Ability::inRandomOrder()->first()->id;
+            $randomNatureId = Nature::inRandomOrder()->first()->id;
+            $skillsIdsForRace = $this->getSkillsForRace($cartItem->race_id);
 
-        $pokemon = Pokemon::create([
-            'name' => Pokemon::DEFAULT_NAME, 
-            'level' => rand(Pokemon::MIN_LEVEL, Pokemon::MAX_LEVEL),
-            'user_id' => $cartItem->user_id,
-            'race_id' => $cartItem->race_id,
-            'ability_id' => $randomAbilityId,
-            'nature_id' => $randomNatureId,
-            'skills' => $skillsIdsForRace,
-        ]);
-
-        return $pokemon;
+            Pokemon::create([
+                'name' => Pokemon::DEFAULT_NAME,
+                'level' => rand(Pokemon::MIN_LEVEL, Pokemon::MAX_LEVEL),
+                'user_id' => $cartItem->user_id,
+                'race_id' => $cartItem->race_id,
+                'ability_id' => $randomAbilityId,
+                'nature_id' => $randomNatureId,
+                'skills' => $skillsIdsForRace,
+            ]);
+        }
     }
 
     protected function getSkillsForRace($raceId)

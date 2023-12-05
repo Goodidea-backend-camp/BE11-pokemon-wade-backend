@@ -36,13 +36,13 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
      */
     // pokemon列表
 
-    Route::apiResource('pokemons', PokemonController::class)->only([
-        'index', 'show', 'destroy'
-    ]);
+    Route::get('pokemons', [PokemonController::class, 'index']);
+    Route::delete('pokemons/{pokemon}',[PokemonController::class, 'destroy']);
 
-    Route::put('pokemons/{pokemon}/evolution', [PokemonController::class, 'evolution']);
 
-    
+    // Route::put('pokemons/{pokemon}/evolution', [PokemonController::class, 'evolution']);
+
+
 
     /**
      * user管理
@@ -50,6 +50,8 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
     // 使用者細節
     Route::get('user', [UserController::class, 'show']);
     Route::post('user', [UserController::class, 'update']);
+
+   
 
 
     // 購物車詳情
@@ -70,14 +72,15 @@ Route::middleware(['jwt.cookie', 'checkStatus', 'throttle:100000,1'])->group(fun
 });
 
 
+
 /**
-     * race管理
-     */
-    // race列表
-    Route::get('races', [RaceController::class, 'index']);
+ * race管理
+ */
+// race列表
+Route::get('races', [RaceController::class, 'index']);
 
 
-    // 註冊
+// 註冊
 Route::post('/register', [RegisterController::class, 'register']);
 
 // 登入
@@ -94,3 +97,11 @@ Route::get('email/verify/{id}/{hash}', [RegisterController::class, 'verifyEmail'
 // 第三方登入
 Route::get('login/google', [GoogleLoginController::class, 'redirectToProvider'])->middleware('web');;
 Route::get('login/google/callback', [GoogleLoginController::class, 'handleProviderCallback'])->middleware('web');;
+
+
+// Route::get('/user', function () {
+//     return view('user');
+// });
+
+
+
